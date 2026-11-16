@@ -54,8 +54,13 @@ adapter 封裝，不得污染領域模型。
 - `examples/` — 可執行範例（編號排序）；每個新功能至少補一個。
 - `notebooks/` — Jupyter 教學（`notebook` extra：`jupyterlab` + `ipykernel`）。
   以 `uv run jupyter lab` 開啟。`notebooks/02_manifolds.ipynb` 是 0.6 的動手玩，
-  已內嵌輸出（含 3D 圖）可直接閱讀；改過請重跑 `uv run jupyter nbconvert
-  --to notebook --execute --inplace <nb>` 更新輸出。
+  已內嵌輸出（含 3D 圖）可直接閱讀；`notebooks/03_manifolds_interactive.ipynb`
+  用 ipympl（`interactive` extra）做可拖曳旋轉的 3D 圖，不預嵌輸出。改過請重跑
+  `uv run jupyter nbconvert --to notebook --execute --inplace <nb>` 更新輸出。
+  **注意：`ruff check .` 會 lint `.ipynb`**（cell 內程式碼視為模組），notebook
+  必須 lint 乾淨，否則 CI 會掛（2026-11-16 實際踩到：commit 0de56b8 因 notebook
+  的 I001/F401/E402/E702 讓 CI 紅）。修法：import 全部集中在第一個 cell、
+  移除未用 import、不寫分號、函式/陳述式間留空行。
 - `benchmarks/` — `timeit` 微基準，量測 SCW 相對 NumPy 的額外開銷。
 - `scripts/verify_phase1.sh` — 一鍵重跑 Phase 1 全部驗收（見 `docs/phase1-acceptance.md`）。
 - `docs/` — MkDocs Material 文件；`docs/spec/` 放規格正本。
@@ -98,6 +103,11 @@ uv run pytest --cov=scw --cov-report=term-missing
 ## 開發慣例
 
 - 依賴管理：`uv`（提交 `uv.lock`，CI 用 `--frozen` 安裝）。
+- **`uv sync --extra <x>` 會移除其他 extra 與 dev 依賴**（2026-11-16 踩到：跑完
+  `uv sync --extra interactive` 後 `ruff` 不見了）。要保留全套請用
+  `uv sync --all-extras`。CI 用 `--all-extras --frozen`。
+- Extras：`symbolic`、`visualization`、`notebook`、`interactive`（後者 =
+  matplotlib + jupyterlab + ipykernel + ipympl，供可拖曳 3D）、`dev`。
 - 版本：Semantic Versioning；1.0 前用 `0.y.z`，破壞性變更記錄於 `CHANGELOG.md`。
 - 直接 commit 進 `main`（不開 PR），除非另有指示。
 - 公開 API 集中由 `__init__.py` 匯出；內部模組路徑在 1.0 前可調整。

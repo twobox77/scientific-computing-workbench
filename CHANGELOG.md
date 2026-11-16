@@ -6,6 +6,20 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `interactive` extra (`matplotlib` + `jupyterlab` + `ipykernel` + `ipympl`) and
+  `notebooks/03_manifolds_interactive.ipynb`: a draggable/zoomable 3D view of
+  the round sphere with sliders for the base point.
+- `scripts/build_gallery.py` and the documentation **Gallery** page, showing
+  every figure the plotting adapter can produce.
+- `docs/offline.md`: how to view and operate SCW without network access.
+
+### Fixed
+
+- Notebook sources now pass `ruff check` (import order, unused imports, no
+  semicolons) so the CI lint gate is green.
+
 ## [0.6.0] - 2026-11-16
 
 ### Added

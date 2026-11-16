@@ -20,6 +20,7 @@ dependencies = [
 symbolic = ["sympy>=1.13"]
 visualization = ["matplotlib>=3.9"]
 notebook = ["jupyterlab>=4.2", "ipykernel>=6.29"]
+interactive = ["matplotlib>=3.9", "jupyterlab>=4.2", "ipykernel>=6.29", "ipympl>=0.9"]
 dev = [
   "pytest>=8.0",
   "pytest-cov>=5.0",

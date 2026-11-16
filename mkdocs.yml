@@ -4,6 +4,8 @@ theme:
 nav:
   - Home: index.md
   - Public API: api.md
+  - Gallery: gallery.md
+  - 離線使用: offline.md
   - Tutorials:
       - Quickstart: tutorials/quickstart.md
   - Mathematics:
