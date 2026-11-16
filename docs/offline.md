@@ -123,3 +123,63 @@ uv run python scripts/build_gallery.py     # 產生 docs/assets/gallery/*.png
 ```
 
 再用系統的圖片檢視器開啟 `docs/assets/gallery/` 內的 PNG。
+
+## 5. 解除安裝
+
+依你要清掉到什麼程度，分三層。**由內而外**做最乾淨。
+
+### 5.1 只移除本專案的虛擬環境（最常見）
+
+專案的 `.venv/` 就在專案目錄內，直接刪除即可（不會動到系統或其他專案）：
+
+```bash
+rm -rf .venv/            # 在專案目錄內執行
+```
+
+### 5.2 清掉 uv 下載的快取與受管 Python
+
+uv 會把套件快取在 `~/.cache/uv`、下載的 Python 放在 `~/.local/share/uv/python`。
+若不再用 uv、想釋放空間：
+
+```bash
+uv cache clean                   # 清空 uv 快取
+uv cache prune                   # 或只清掉不再使用的項目（較溫和）
+uv python uninstall <版本>       # 移除某個 uv 受管 Python，例如 uv python uninstall 3.12
+uv python list                   # 先列出已安裝的版本
+rm -rf "$(uv python dir)"        # 或一次移除所有 uv 受管 Python
+rm -rf "$(uv tool dir)"          # 移除 uv 安裝的 CLI 工具（若沒用可略）
+```
+
+> `uv cache dir`、`uv python dir`、`uv tool dir` 可印出實際路徑，先看再刪較安心。
+
+### 5.3 完全移除 uv 本身
+
+uv **沒有** `uv self uninstall` 子命令（`uv self` 只有 `update` / `version`），
+需手動刪除執行檔。依[官方安裝文件](https://docs.astral.sh/uv/getting-started/installation/)
+的解除安裝步驟：
+
+```bash
+# 1)（可選）先清掉 uv 儲存的資料
+uv cache clean
+rm -rf "$(uv python dir)"
+rm -rf "$(uv tool dir)"
+
+# 2) 刪除 uv / uvx 執行檔（路徑依你的安裝方式而定）
+rm -f ~/.local/bin/uv ~/.local/bin/uvx          # 官方 standalone 安裝器的預設位置
+# 0.5.0 之前裝在：rm -f ~/.cargo/bin/uv ~/.cargo/bin/uvx
+# 若用系統套件管理器安裝（例如 apt / Homebrew），請用對應方式移除，例如：
+#   sudo apt remove uv        # Debian/Ubuntu（視安裝來源）
+#   brew uninstall uv         # macOS（Homebrew）
+```
+
+用 `which uv uvx` 可先確認實際路徑，再刪對應檔案。本沙盒環境的 uv 在
+`/usr/bin/uv`（系統層級安裝），移除方式與上述 standalone 安裝不同。
+
+### 5.4 移除整個專案
+
+```bash
+cd ..
+rm -rf scientific-computing-workbench/     # 或 scw-<version>/
+```
+
+若只是想解除安裝**套件**（不是原始碼）：`uv pip uninstall scw`。
