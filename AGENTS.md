@@ -179,6 +179,24 @@ uv run pytest --cov=scw --cov-report=term-missing
   整檔在缺 extra 時跳過。繪圖程式碼列入 coverage omit（與 symbolic 一致）。
 - 範例輸出寫進 gitignored 的 `scw_plots/`，勿把 PNG 提交進 repo。
 
+## 發行說明（每個版本都要附中文指南）
+
+每次發行（推 `v*` tag）時，release notes 必須包含同一份中文「安裝／欣賞／
+操作／解除安裝」指南。**不要手寫貼上**，改用產生器以維持單一來源：
+
+```bash
+uv run python scripts/make_release_notes.py v0.7.0 -o notes.md   # 或設 GITHUB_REF_NAME
+gh release create v0.7.0 --notes-file notes.md
+```
+
+- 英文「本次變更」取自 `CHANGELOG.md` 的 `## [x.y.z]` 段（單一來源）。
+- 中文指南取自 `docs/offline.md`（單一來源；產生器會把版本字串換成目標版）。
+- 「本版新增作品」由 git 歷史自動列出該版新增的 `examples/`、`notebooks/`。
+- 新作品的中文一句說明加在 `scripts/make_release_notes.py` 的
+  `WORK_DESCRIPTIONS`；漏加會退回顯示檔名。
+- `.github/workflows/release.yml` 已接上產生器：推 tag 會自動產生並帶入中文指南
+  （舊 tag 沒對應 CHANGELOG 段時，退回 GitHub 自動產生的 notes）。
+
 ## 已知環境注意事項
 
 - 沙盒內建 `GITHUB_TOKEN`（`ghu_`）與 `GITHUB_PERSONAL_ACCESS_TOKEN`（`github_pat_`）

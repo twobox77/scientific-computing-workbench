@@ -80,13 +80,49 @@ uv sync --all-extras --frozen      # 安裝全部依賴（含繪圖 / notebook /
   （中文：無法 open：沒有此一檔案或目錄）
   → 你還沒把壓縮包**下載到當前目錄**。先從 Release Assets 下載，或改用 git（A）。
 
-## 1. 純文字：跑範例、看數值
+## 1. 作品總覽：範例與 notebook
+
+本專案的「作品」分三類：**範例腳本**（`examples/`，印數值或輸出圖檔）、
+**notebook**（`notebooks/`，圖文並茂的教學）、以及**文件站**（見 §2）。
+下表列出目前所有作品；`uv run` 前請先完成 §0.5 的依賴安裝。
+
+### 範例腳本（`examples/`）
+
+| 檔案 | 內容 | 需要 extra |
+| --- | --- | --- |
+| `01_vectors_and_covectors.py` | 向量、餘向量與自然配對 | — |
+| `02_matrix_operations.py` | 矩陣、線性映射與解線性系統 | — |
+| `03_tensor_operations.py` | 張量：外積、縮併與跡 | — |
+| `04_bases_and_coordinates.py` | 基底與座標：端到端數值流程 | — |
+| `05_symbolic_algebra.py` | 符號線性代數（精確解，再收斂成數值） | `symbolic` |
+| `06_decompositions.py` | 矩陣分解：LU / QR / SVD / Cholesky / eigh | — |
+| `07_ode_solving.py` | 常微分方程初值問題（衰減、簡諧振子） | — |
+| `08_visualization.py` | Matplotlib 繪圖，輸出 PNG 到 `scw_plots/` | `visualization` |
+| `09_manifolds.py` | 流形：切空間、metric、flat/sharp | — |
+
+跑單一範例（輸出到終端機）：
 
 ```bash
 uv run python examples/09_manifolds.py        # 0.6 流形：切空間、metric、flat/sharp
-uv run python examples/08_visualization.py    # 繪圖範例，輸出 PNG 到 scw_plots/
 uv run python examples/06_decompositions.py   # 0.4 分解：LU / QR / SVD / Cholesky / eigh
+uv run python examples/05_symbolic_algebra.py # 需 symbolic extra：uv sync --extra symbolic
 ```
+
+要一次跑「需要 optional extra」的範例，先裝對應 extra：
+
+```bash
+uv sync --all-extras                          # 或 uv sync --extra symbolic / --extra visualization
+```
+
+### Notebook（`notebooks/`）
+
+| 檔案 | 內容 | 需要 extra |
+| --- | --- | --- |
+| `01_scw_quickstart.ipynb` | 基礎導覽 | `notebook` |
+| `02_manifolds.ipynb` | 流形靜態教學（已內嵌圖，讀即可） | `notebook` |
+| `03_manifolds_interactive.ipynb` | 流形互動教學（3D 可拖曳，見 §3） | `interactive` |
+
+啟動 Jupyter 後即可開啟（見 §3）：`uv run jupyter lab`。
 
 ## 2. 看文件網站（離線）
 

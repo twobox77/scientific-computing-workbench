@@ -26,7 +26,17 @@ jobs:
         run: |
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             echo "Release $GITHUB_REF_NAME already exists."
+            exit 0
+          fi
+          # Prefer the generated notes (English changelog + the shared Chinese
+          # guide + the works added by this release); fall back to GitHub's
+          # generated notes for old tags that predate the generator.
+          if python3 scripts/make_release_notes.py "$GITHUB_REF_NAME" -o notes.md; then
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" \
+              --notes-file notes.md
           else
+            echo "release-notes generator unavailable; using generated notes"
             gh release create "$GITHUB_REF_NAME" \
               --title "$GITHUB_REF_NAME" \
               --generate-notes

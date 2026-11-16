@@ -8,12 +8,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- `scripts/make_release_notes.py`: composes each GitHub release's notes from
+  a single source — the English section from `CHANGELOG.md`, the shared
+  Chinese guide from `docs/offline.md` (retargeted to the version), and the
+  works (examples/notebooks) added by that release, derived from git history.
+  Wired into the release workflow so every future tag gets the same Chinese
+  companion guide automatically.
+- `docs/offline.md`: an "作品總覽" (works overview) section listing every
+  example and notebook with its purpose and required extra.
 - `interactive` extra (`matplotlib` + `jupyterlab` + `ipykernel` + `ipympl`) and
   `notebooks/03_manifolds_interactive.ipynb`: a draggable/zoomable 3D view of
   the round sphere with sliders for the base point.
 - `scripts/build_gallery.py` and the documentation **Gallery** page, showing
   every figure the plotting adapter can produce.
 - `docs/offline.md`: how to view and operate SCW without network access.
+
+### Changed
+
+- Backfilled releases `v0.1.0`/`v0.2.0`/`v0.3.0` (tags, notes and built
+  wheel/sdist) so all six versions carry the same Chinese guide; fixed the
+  `CHANGELOG.md` compare links (`[Unreleased]` and the missing `[0.6.0]`).
 
 ### Fixed
 
@@ -144,7 +158,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.2.0...v0.3.0
