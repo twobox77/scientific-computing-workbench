@@ -179,6 +179,15 @@ uv run pytest --cov=scw --cov-report=term-missing
   整檔在缺 extra 時跳過。繪圖程式碼列入 coverage omit（與 symbolic 一致）。
 - 範例輸出寫進 gitignored 的 `scw_plots/`，勿把 PNG 提交進 repo。
 
+## 文件語言
+
+- **`README.md` 與 `docs/index.md` 以中文撰寫**，作為專案入口：整合**計畫**
+  （連規格 `docs/spec/`）、**進度**（逐版狀態表，連各版 release）、**成果**
+  （範例／notebook／gallery／離線指南），並含安裝／使用／解除安裝。
+- 其餘文件（`docs/api.md`、`docs/development.md` 等）與程式碼註解維持英文；
+  中文長篇說明集中在 `docs/offline.md` 與 README。
+- 更新進度時：先改 `CHANGELOG.md`，再同步 README 的版本狀態表與 release。
+
 ## 發行說明（每個版本都要附中文指南）
 
 每次發行（推 `v*` tag）時，release notes 必須包含同一份中文「安裝／欣賞／

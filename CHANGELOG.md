@@ -16,6 +16,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   companion guide automatically.
 - `docs/offline.md`: an "作品總覽" (works overview) section listing every
   example and notebook with its purpose and required extra.
+- Chinese `README.md`: rewrites the landing page in Chinese and consolidates
+  the project plan, per-version progress and the works, each linking to its
+  source (spec, acceptance report, changelog, releases, examples, notebooks,
+  gallery, offline guide).  `docs/index.md` is rewritten to match.
 - `interactive` extra (`matplotlib` + `jupyterlab` + `ipykernel` + `ipympl`) and
   `notebooks/03_manifolds_interactive.ipynb`: a draggable/zoomable 3D view of
   the round sphere with sliders for the base point.
