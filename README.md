@@ -24,10 +24,13 @@ Supported today:
   with dimension/shape validation and read-only data access.
 - `scw.numerical`: `solve`, `inverse`, `det` (SciPy-backed).
 - CLI: `scw version`, `scw doctor`.
-- Unit, property-based (Hypothesis) and integration tests.
+- Unit, property-based (Hypothesis), integration and regression tests.
 
 Not supported yet: tensors, symbolic calculus, ODE/PDE solvers, manifolds,
 physics simulation, plotting. See the roadmap in the specification.
+
+Documentation: [Public API](docs/api.md), [Development](docs/development.md),
+[Quickstart](docs/tutorials/quickstart.md).
 
 ## Install
 

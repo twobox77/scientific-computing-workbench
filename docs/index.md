@@ -3,5 +3,7 @@
 A Python workbench for scientific computing: typed mathematical objects on top
 of NumPy and SciPy, with reproducible, testable tooling.
 
-See the [Quickstart](tutorials/quickstart.md) to get started, and
+See the [Quickstart](tutorials/quickstart.md) to get started, the
+[Public API](api.md) reference for the supported surface, and
 [Architecture decisions](architecture/decisions.md) for the design rationale.
+Contributors should read [Development](development.md).

@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Property tests for `LinearMap`/`Matrix` covering the algebraic laws the
+  specification requires (additivity, homogeneity, composition, transpose
+  involution, associativity, NumPy equivalence).
+- Regression test layer (`tests/regression/`) pinning the numerical edge cases
+  fixed so far (norm under/overflow, defensive copies, read-only views,
+  non-finite rejection, type separation).
+- Public API reference (`docs/api.md`) and development guide
+  (`docs/development.md`).
+
 ## [0.1.0] - 2026-11-16
 
 ### Added
