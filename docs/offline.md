@@ -3,9 +3,42 @@
 本頁說明如何在**沒有網路**的環境中「看」與「玩」SCW。發行版（GitHub Releases）
 的說明也附有同樣內容。
 
-## 0. 準備環境（一次性）
+## 0. 取得原始碼並進入專案目錄
 
-需要 [`uv`](https://docs.astral.sh/uv/)。連網時：
+`uv` 必須在**有 `pyproject.toml` 的目錄**執行。請先把原始碼放到磁碟，再 `cd` 進去；
+以下三種來源任選一種。
+
+**A. 用 git 取得（有網路時）**
+
+```bash
+git clone https://github.com/twobox77/scientific-computing-workbench.git
+cd scientific-computing-workbench        # ← 一定要進來，這裡才有 pyproject.toml
+```
+
+**B. 用 Release 的原始碼壓縮包（`scw-0.6.0.tar.gz`）**
+
+```bash
+tar xzf scw-0.6.0.tar.gz                 # 解開後目錄名為 scw-0.6.0/
+cd scw-0.6.0                             # ← 一定要進來
+```
+
+**C. 只安裝套件（不跑範例／文件／notebook）**
+
+```bash
+uv pip install scw-0.6.0-py3-none-any.whl   # 或 uv pip install scw-0.6.0.tar.gz
+```
+
+> 只有 A、B 兩種（原始碼）能跑範例、文件站與 notebook；C 只裝套件。
+
+確認你人在正確目錄：
+
+```bash
+ls pyproject.toml        # 有列出檔案才對；沒有就是走錯目錄了
+```
+
+## 0.5 安裝依賴（一次性）
+
+在**上一步 `cd` 進去的專案目錄內**，連網時：
 
 ```bash
 uv sync --all-extras --frozen      # 安裝全部依賴（含繪圖 / notebook / 互動）
@@ -13,6 +46,16 @@ uv sync --all-extras --frozen      # 安裝全部依賴（含繪圖 / notebook /
 
 完全離線時，先在可連網的機器執行 `uv sync --all-extras`，取得 uv 快取
 （`uv cache dir`），再把整個 `.venv/`（或 uv 快取）複製到離線機器。
+離線機器上之後的指令都要在**同一個專案目錄**內執行。
+
+### 常見錯誤：`No pyproject.toml found in current directory or any parent directory`
+
+代表你**不在專案目錄內**（例如還停在 `~` 家目錄）。先 `cd` 進去再重跑：
+
+```bash
+cd scientific-computing-workbench   # 或 cd scw-0.6.0（依你的來源）
+uv sync --all-extras --frozen
+```
 
 ## 1. 純文字：跑範例、看數值
 
