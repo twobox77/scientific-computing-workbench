@@ -23,6 +23,22 @@ t = LinearMap.from_matrix(a)
 print(t.apply(Vector([1.0, 1.0])))
 ```
 
+## Numerical work
+
+```python
+from scw.math_core import Matrix, Vector
+from scw.numerical import lu, solve, solve_ivp
+
+a = Matrix([[4.0, 7.0], [2.0, 6.0]])
+x = solve(a, Vector([1.0, 0.0]))   # solve a x = b
+print(x.data)
+print(lu(a).reconstruct().data)   # factorizations rebuild the matrix
+
+# Integrate y' = -y from y(0) = 1, sampling at a few times.
+sol = solve_ivp(lambda t, y: -1.0 * y, (0.0, 2.0), Vector([1.0]), t_eval=[0.0, 2.0])
+print(sol.final_state.data)       # ~ exp(-2)
+```
+
 ## Command line
 
 ```bash

@@ -97,6 +97,28 @@ uv run pytest --cov=scw --cov-report=term-missing
 0.6 Manifold → 0.7 Physics → 0.8 Experiments → 0.9 API 穩定化 → 1.0 穩定。
 版本以驗收條件與模組成熟度決定，不按日曆。
 
+### 已完成的里程碑
+
+- **0.2** Tensor / Basis。
+- **0.3** `scw.symbolic`（SymPy adapter，optional extra）、`einsum`。
+- **0.4** `scw.numerical` 數值層：`lstsq`；分解 `lu`/`qr`/`svd`/`cholesky`/`eigh`
+  （每個結果都有 `reconstruct`，`SVDResult.rank` 隨尺度取容差）；`solve_ivp` +
+  `ODESolution` 包裝 `scipy.integrate.solve_ivp`（RHS 以 `(t, Vector) -> Vector`
+  書寫，`METHODS` 列出可用積分器，支援 `t_eval`/`rtol`/`atol`/`dense_output`）。
+  新例外：`NumericalError`（`ValueError`）、`ConvergenceError`（`RuntimeError`）。
+  範例 `06_decompositions.py`、`07_ode_solving.py`。
+
+### 數值層慣例（0.4 起）
+
+- 演算法一律放 `scw/numerical/`，接受 `math_core` 的 `Matrix`/`Vector`，**不得**反向
+  污染領域模型；每個公開函式先驗證型別/形狀再委派 SciPy，錯的一律丟 SCW 例外
+  （不讓裸 `numpy.linalg.LinAlgError` 外洩）。
+- 分解結果用 `@dataclass(frozen=True)` 的 Result 物件，並提供 `reconstruct()`，
+  讓性質測試能用「重建原矩陣」當不變量（實測最壞誤差 ~9e-12，對 `atol=1e-6`
+  有 ~1000× 餘裕）。
+- ODE 失敗屬執行期條件，用 `ConvergenceError`（`RuntimeError`）；形狀/維度問題才用
+  `DimensionError`/`ShapeError`（`ValueError`）。`ODESolution.t`/`.y` 回唯讀視圖。
+
 ## 已知環境注意事項
 
 - 沙盒內建 `GITHUB_TOKEN`（`ghu_`）與 `GITHUB_PERSONAL_ACCESS_TOKEN`（`github_pat_`）

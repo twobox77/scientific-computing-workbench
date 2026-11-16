@@ -12,7 +12,7 @@ uv run pre-commit install # optional: run ruff on every commit
 ```text
 src/scw/
   math_core/      domain types: VectorSpace, Vector, Covector, Matrix, LinearMap
-  numerical/      SciPy-backed linear algebra
+  numerical/      SciPy-backed linear algebra, decompositions and ODE solving
   symbolic/       (boundary only in Phase 1)
   visualization/  (boundary only in Phase 1)
   physics/        (boundary only in Phase 1)

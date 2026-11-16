@@ -27,3 +27,11 @@ class NonFiniteError(SCWError, ValueError):
 
 class SymbolicError(SCWError, ValueError):
     """A symbolic value cannot be turned into a numeric one, or vice versa."""
+
+
+class NumericalError(SCWError, ValueError):
+    """A numerical routine cannot proceed with the given input."""
+
+
+class ConvergenceError(SCWError, RuntimeError):
+    """An iterative numerical method failed to converge."""

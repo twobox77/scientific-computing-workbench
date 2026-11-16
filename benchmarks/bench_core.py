@@ -22,7 +22,7 @@ from collections.abc import Callable
 import numpy as np
 
 from scw.math_core import LinearMap, Matrix, Tensor, Vector
-from scw.numerical import det, solve
+from scw.numerical import det, lu, solve, solve_ivp, svd
 
 RNG = np.random.default_rng(20260101)
 
@@ -69,6 +69,15 @@ def build_benchmarks() -> dict[str, Callable[[], object]]:
     def bench_det_8x8() -> object:
         return det(a8)
 
+    def bench_lu_8x8() -> object:
+        return lu(a8)
+
+    def bench_svd_8x8() -> object:
+        return svd(a8)
+
+    def bench_ode_decay() -> object:
+        return solve_ivp(lambda t, y: -1.0 * y, (0.0, 1.0), Vector([1.0]))
+
     return {
         "vector_add": bench_vector_add,
         "vector_norm": bench_vector_norm,
@@ -79,6 +88,9 @@ def build_benchmarks() -> dict[str, Callable[[], object]]:
         "tensor_contract_8x8": bench_tensor_contract,
         "solve_8x8": bench_solve_8x8,
         "det_8x8": bench_det_8x8,
+        "lu_8x8": bench_lu_8x8,
+        "svd_8x8": bench_svd_8x8,
+        "ode_decay_1d": bench_ode_decay,
     }
 
 

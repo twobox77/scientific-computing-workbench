@@ -15,8 +15,10 @@ import timeit
 from collections.abc import Callable
 
 import numpy as np
+import scipy.linalg
 
 from scw.math_core import Matrix, Vector
+from scw.numerical import lu, svd
 
 RNG = np.random.default_rng(20260101)
 
@@ -42,6 +44,8 @@ def main() -> None:
         ("vector dot", lambda: v.dot(w), lambda: float(np.dot(raw_v, raw_w))),
         ("matrix product", lambda: a @ b, lambda: raw_a @ raw_b),
         ("matrix transpose", lambda: a.transpose(), lambda: raw_a.T),
+        ("lu", lambda: lu(a), lambda: scipy.linalg.lu(raw_a)),
+        ("svd", lambda: svd(a), lambda: scipy.linalg.svd(raw_a)),
     ]
 
     print(f"{'operation':<20}{'scw us':>10}{'numpy us':>10}{'ratio':>8}")

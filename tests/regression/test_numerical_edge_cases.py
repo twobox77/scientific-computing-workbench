@@ -7,7 +7,9 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from scw.exceptions import ConvergenceError, NumericalError
 from scw.math_core import Covector, LinearMap, Matrix, Vector
+from scw.numerical import cholesky, lstsq, lu, solve_ivp, svd
 
 
 def test_norm_underflow_does_not_report_zero_for_nonzero_vector() -> None:
@@ -77,3 +79,52 @@ def test_covector_and_vector_are_distinct_types() -> None:
         Vector([1.0, 2.0]).dot(alpha)  # type: ignore[arg-type]
     with pytest.raises(TypeError):
         LinearMap(Matrix([[1.0, 0.0], [0.0, 1.0]])).apply(alpha)  # type: ignore[arg-type]
+
+
+def test_lu_uses_permutation_so_pivoting_survives_zero_leading_entry() -> None:
+    # Regression: an LU without pivoting would divide by the zero pivot here.
+    # The permutation factor must absorb the row swap and reconstruct A.
+    a = Matrix([[0.0, 1.0], [1.0, 0.0]])
+    result = lu(a)
+    assert not np.allclose(result.p.data, np.eye(2))
+    np.testing.assert_allclose(result.reconstruct().data, a.data, atol=1e-12)
+
+
+def test_cholesky_rejects_symmetric_indefinite_matrix() -> None:
+    # Regression: symmetry alone is not enough; an indefinite matrix has no
+    # real Cholesky factor and must fail with an SCW error, not a bare one.
+    with pytest.raises(NumericalError):
+        cholesky(Matrix([[1.0, 0.0], [0.0, -1.0]]))
+
+
+def test_svd_rank_threshold_is_scale_aware() -> None:
+    # Regression: a fixed absolute threshold would call this large-but-rank-1
+    # matrix full rank.  The rank test scales with the largest singular value.
+    huge = Matrix([[1e6, 2e6], [2e6, 4e6]])
+    assert svd(huge).rank() == 1
+
+
+def test_lstsq_residual_norm_zero_for_consistent_overdetermined_system() -> None:
+    # Regression: a consistent overdetermined system must solve exactly.
+    a = Matrix([[1.0, 1.0], [1.0, 2.0], [1.0, 3.0]])
+    b = Vector([1.0, 2.0, 3.0])
+    result = lstsq(a, b)
+    assert result.residual_norm == pytest.approx(0.0, abs=1e-9)
+
+
+def test_ode_failure_is_a_convergence_error_not_a_value_error() -> None:
+    # Regression: a failed integration is a runtime condition, so it must be
+    # catchable as RuntimeError (ConvergenceError), not as a shape/dimension
+    # ValueError.  ``SCWError`` is the common base either way.
+    def blowup(t, y):
+        return Vector(y.data**2)
+
+    with pytest.raises(ConvergenceError):
+        solve_ivp(blowup, (0.0, 2.0), Vector([1.0]))
+
+
+def test_ode_solution_arrays_are_read_only_views() -> None:
+    # Regression: callers must not be able to mutate the stored trajectory.
+    sol = solve_ivp(lambda t, y: -1.0 * y, (0.0, 1.0), Vector([1.0]))
+    with pytest.raises(ValueError):
+        sol.y[0, 0] = 123.0

@@ -16,6 +16,7 @@ from scw.math_core import (
     VectorSpace,
     einsum,
 )
+from scw.numerical import lu, solve, solve_ivp, svd
 
 
 def test_public_reexports() -> None:
@@ -76,3 +77,54 @@ def test_symbolic_round_trip_to_numeric() -> None:
     assert m.to_numeric() == Matrix([[4.0, 1.0], [2.0, 3.0]])
     numeric = Matrix([[2.0, 0.0], [0.0, 5.0]])
     assert to_symbolic(numeric).to_numeric() == numeric
+
+
+def test_numerical_reexports() -> None:
+    from scw.numerical import (
+        EighResult,
+        LeastSquaresResult,
+        LUResult,
+        ODESolution,
+        QRResult,
+        SVDResult,
+        cholesky,
+        eigh,
+        lstsq,
+        lu,
+        qr,
+        solve_ivp,
+        svd,
+    )
+
+    assert all(callable(fn) for fn in (lu, qr, svd, cholesky, eigh, lstsq, solve_ivp))
+    assert all(
+        isinstance(cls, type)
+        for cls in (
+            LUResult,
+            QRResult,
+            SVDResult,
+            EighResult,
+            LeastSquaresResult,
+            ODESolution,
+        )
+    )
+
+
+def test_decomposition_and_solve_agree_on_a_linear_system() -> None:
+    a = Matrix([[4.0, 7.0], [2.0, 6.0]])
+    b = Vector([1.0, 0.0])
+    x = solve(a, b)
+    # A factorization must reconstruct A, so applying it to x recovers b.
+    np.testing.assert_allclose(lu(a).reconstruct().data @ x.data, b.data, atol=1e-9)
+    np.testing.assert_allclose(svd(a).reconstruct().data @ x.data, b.data, atol=1e-9)
+
+
+def test_ode_solution_feeds_back_into_the_domain_layer() -> None:
+    # The trajectory is a sequence of Vectors, usable by the core operations.
+    def field(t, y):
+        return Vector([-y.data[1], y.data[0]])
+
+    sol = solve_ivp(field, (0.0, 1.0), Vector([1.0, 0.0]), t_eval=[0.0, 1.0])
+    first, last = sol.state_at(0), sol.state_at(1)
+    assert first.dimension == last.dimension == 2
+    assert first.dot(first) == pytest.approx(1.0)

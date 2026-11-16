@@ -6,6 +6,30 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-16
+
+### Added
+
+- `scw.numerical` decompositions: `lu`, `qr`, `svd`, `cholesky` and `eigh`,
+  each returning a small immutable result (`LUResult`, `QRResult`, `SVDResult`,
+  `EighResult`) with `reconstruct`, plus `SVDResult.rank` (scale-aware).
+- `lstsq`: minimum-norm least-squares solution of over- or under-determined
+  systems, returning a `LeastSquaresResult` (solution, residuals, rank,
+  singular values).
+- `solve_ivp`: initial-value ODE integration wrapping
+  `scipy.integrate.solve_ivp` with a `(t, Vector) -> Vector` right-hand side;
+  returns an `ODESolution` with `t`, `y`, `final_state`, `state_at` and
+  (with `dense_output=True`) `interpolate`.  `METHODS` lists the supported
+  integrators.
+- `NumericalError` (a `ValueError`) and `ConvergenceError` (a `RuntimeError`)
+  domain exceptions.
+- Examples `06_decompositions.py` and `07_ode_solving.py`.
+
+### Changed
+
+- The `float64` policy is unchanged; every new routine validates its input and
+  raises an SCW exception rather than leaking a bare SciPy/NumPy error.
+
 ## [0.3.0] - 2026-11-16
 
 ### Added
@@ -70,7 +94,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.1.0

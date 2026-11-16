@@ -24,7 +24,9 @@ Supported today:
   plus `Tensor` (order-r arrays, outer product, contraction, trace, `einsum`)
   and `Basis` (coordinates), with dimension/shape validation and read-only data
   access.
-- `scw.numerical`: `solve`, `inverse`, `det` (SciPy-backed).
+- `scw.numerical`: `solve`, `inverse`, `det`, `lstsq`; factorizations `lu`,
+  `qr`, `svd`, `cholesky`, `eigh` (each with `reconstruct`); and `solve_ivp`
+  for initial-value ODEs (SciPy-backed).
 - `scw.symbolic` (optional `symbolic` extra): `SymbolicMatrix` / `SymbolicVector`
   over SymPy, with explicit conversion to and from the numeric types.
 - CLI: `scw version`, `scw doctor`.
@@ -33,7 +35,7 @@ Supported today:
 - CI complexity guard (`scripts/complexity_guard.py`) keeping per-element loops
   out of the core.
 
-Not supported yet: symbolic calculus (integration/limits), ODE/PDE solvers,
+Not supported yet: symbolic calculus (integration/limits), PDE solvers,
 manifolds, physics simulation, plotting. See the roadmap in the specification.
 
 Documentation: [Public API](docs/api.md), [Development](docs/development.md),
@@ -83,6 +85,8 @@ uv run python examples/01_vectors_and_covectors.py
 uv run python examples/02_matrix_operations.py
 uv run python examples/03_tensor_operations.py
 uv run python examples/04_bases_and_coordinates.py
+uv run python examples/06_decompositions.py
+uv run python examples/07_ode_solving.py
 uv run python benchmarks/bench_core.py
 ```
 

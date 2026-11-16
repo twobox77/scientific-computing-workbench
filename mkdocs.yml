@@ -8,6 +8,7 @@ nav:
       - Quickstart: tutorials/quickstart.md
   - Mathematics:
       - Vector spaces: mathematics/vector-spaces.md
+      - Numerical methods: mathematics/numerical-methods.md
       - Symbolic algebra: mathematics/symbolic.md
   - Architecture:
       - Decisions: architecture/decisions.md

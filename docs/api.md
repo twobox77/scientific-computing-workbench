@@ -137,28 +137,100 @@ raise `DimensionError`.
 
 ## `scw.numerical`
 
-SciPy-backed linear algebra on `Matrix` / `Vector` inputs:
+SciPy-backed linear algebra and ODE integration on `Matrix` / `Vector` inputs.
+
+### Linear systems
 
 ```python
-from scw.numerical import solve, inverse, det
+from scw.numerical import solve, inverse, det, lstsq
 
-solve(a, b)      # a x = b
+solve(a, b)      # a x = b (square a)
 inverse(a)       # a^-1
 det(a)           # determinant
+lstsq(a, b)      # least-squares solution for any shape
 ```
 
-All three require square (and, where relevant, consistently shaped) inputs and
-raise the SCW exceptions on violation.
+`solve`, `inverse` and `det` require square (and, where relevant, consistently
+shaped) inputs. `lstsq` works for over- and under-determined systems and returns
+a `LeastSquaresResult`:
+
+```python
+r = lstsq(a, b)
+r.solution         # minimum-norm solution, a Vector
+r.rank             # numerical rank of a
+r.residual_norm    # ||a x - b||  (0.0 for a consistent/underdetermined system)
+r.singular_values  # singular values of a, a Vector
+```
+
+### Decompositions
+
+```python
+from scw.numerical import lu, qr, svd, cholesky, eigh
+
+lu(a)                 # A = P L U;  factors .p, .lower, .upper
+qr(a)                 # A = Q R;    factors .q, .r  (mode="full"|"economic")
+svd(a)                # A = U diag(s) Vh;  .u, .s, .vh, plus .rank()
+cholesky(a)           # A = L L^T  (symmetric positive-definite), returns L
+eigh(a)               # A = V diag(w) V^T;  .eigenvalues, .eigenvectors
+```
+
+Each factorization result exposes `reconstruct()`, so a factor can be checked by
+rebuilding the original matrix:
+
+```python
+import numpy as np
+np.allclose(lu(a).reconstruct().data, a.data)   # True
+svd(a).rank()                                    # scale-aware numerical rank
+```
+
+`cholesky` and `eigh` require a symmetric input and raise `NumericalError`
+otherwise (or when the matrix is not positive-definite); `lu` requires a square
+matrix. `eigh` returns real eigenvalues in ascending order and orthonormal
+eigenvectors.
+
+### ODE integration
+
+```python
+from scw.math_core import Vector
+from scw.numerical import solve_ivp, METHODS
+
+def rhs(t, y):          # y' = -y
+    return -1.0 * y
+
+sol = solve_ivp(rhs, (0.0, 5.0), Vector([1.0]), t_eval=[0.0, 5.0])
+sol.t               # time grid
+sol.y               # states, shape (n_points, dimension)
+sol.final_state     # Vector at the last time
+sol.state_at(i)     # Vector at grid point i
+sol.success, sol.message, sol.method
+```
+
+The right-hand side takes `(t, Vector)` and returns a `Vector` (or any
+array-like of the same dimension). `method` must be one of `METHODS` (`RK45`,
+`RK23`, `DOP853`, `Radau`, `BDF`, `LSODA`); `rtol`, `atol`, `max_step`,
+`first_step` and `t_eval` mirror SciPy. Passing `dense_output=True` enables
+`sol.interpolate(t)` for the state at an arbitrary time. A failed integration
+raises `ConvergenceError` unless `raise_on_failure=False`.
 
 ## Exceptions
 
 ```python
-from scw.exceptions import SCWError, DimensionError, ShapeError, NonFiniteError
+from scw.exceptions import (
+    SCWError,
+    ConvergenceError,
+    DimensionError,
+    NonFiniteError,
+    NumericalError,
+    ShapeError,
+    SymbolicError,
+)
 ```
 
-Every SCW error is a subclass of `SCWError`; the value-like ones
-(`DimensionError`, `ShapeError`, `NonFiniteError`) also subclass `ValueError`,
-so `except ValueError` catches them too.
+Every SCW error is a subclass of `SCWError`. The value-like ones
+(`DimensionError`, `ShapeError`, `NonFiniteError`, `NumericalError`,
+`SymbolicError`) also subclass `ValueError`, so `except ValueError` catches
+them too. `ConvergenceError` (a failed ODE integration or iterative method)
+also subclasses `RuntimeError`.
 
 ## `scw.symbolic`
 
