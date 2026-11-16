@@ -36,6 +36,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Backfilled releases `v0.1.0`/`v0.2.0`/`v0.3.0` (tags, notes and built
   wheel/sdist) so all six versions carry the same Chinese guide; fixed the
   `CHANGELOG.md` compare links (`[Unreleased]` and the missing `[0.6.0]`).
+- `.pre-commit-config.yaml`: bump the pinned `ruff-pre-commit` from `v0.6.9` to
+  `v0.17.5`, matching `uv.lock`.  The old pin flagged `UP038` in files the
+  locked ruff accepts, so `pre-commit run --all-files` failed on a clean tree.
 
 ### Fixed
 

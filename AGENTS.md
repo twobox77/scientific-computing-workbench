@@ -103,6 +103,10 @@ uv run pytest --cov=scw --cov-report=term-missing
 ## 開發慣例
 
 - 依賴管理：`uv`（提交 `uv.lock`，CI 用 `--frozen` 安裝）。
+- **`.pre-commit-config.yaml` 的 `ruff-pre-commit` rev 必須與 `uv.lock` 的 ruff 版本一致**。
+  曾因 pre-commit 釘舊版（v0.6.9）而 uv.lock 是新版（0.17.5），在乾淨的樹上
+  `pre-commit run --all-files` 冒出 `UP038`，CI 卻過——版本落差會製造假失敗。
+  升 ruff 時兩處一起改。
 - **`uv sync --extra <x>` 會移除其他 extra 與 dev 依賴**（2026-11-16 踩到：跑完
   `uv sync --extra interactive` 後 `ruff` 不見了）。要保留全套請用
   `uv sync --all-extras`。CI 用 `--all-extras --frozen`。
