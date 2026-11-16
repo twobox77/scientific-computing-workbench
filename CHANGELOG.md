@@ -6,6 +6,23 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-16
+
+### Added
+
+- `scw.visualization`: an optional Matplotlib adapter (installed with the
+  `visualization` extra) that draws SCW domain objects.  The core never imports
+  Matplotlib and never returns a figure; every helper reads its input and
+  returns the `Axes` it drew on.
+  - 2D: `plot_vector`, `plot_vectors`, `plot_function`, `plot_vector_field`
+    (with `normalize`), `plot_matrix` (heat map with optional colorbar and cell
+    annotations) and `plot_ode_solution`.
+  - 3D: `new_3d_figure`, `plot_vectors_3d` and `plot_surface`.
+  - `new_figure` for an explicit `(Figure, Axes)` pair.
+- Example `08_visualization.py` (writes PNGs into a gitignored `scw_plots/`).
+- `mypy` ignores missing stubs for `mpl_toolkits` (Matplotlib ships no
+  `py.typed`).
+
 ## [0.4.0] - 2026-11-16
 
 ### Added
@@ -94,7 +111,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.1.0...v0.2.0

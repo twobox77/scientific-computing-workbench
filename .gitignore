@@ -25,3 +25,6 @@ site/
 .vscode/
 .idea/
 .DS_Store
+
+# Generated plots (examples)
+scw_plots/

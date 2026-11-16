@@ -39,6 +39,25 @@ sol = solve_ivp(lambda t, y: -1.0 * y, (0.0, 2.0), Vector([1.0]), t_eval=[0.0, 2
 print(sol.final_state.data)       # ~ exp(-2)
 ```
 
+## Visualization
+
+Plotting is an optional extra (`uv sync --extra visualization`); the core never
+imports Matplotlib.
+
+```python
+import matplotlib
+matplotlib.use("Agg")            # headless; drop this to show interactively
+
+import numpy as np
+from scw.math_core import Vector
+from scw.visualization import new_figure, plot_function, plot_vector
+
+fig, ax = new_figure()
+plot_vector(Vector([2.0, 1.0]), ax=ax, label="v")
+plot_function(np.sin, (0.0, 2 * np.pi), samples=256)
+fig.savefig("plot.png", dpi=120)
+```
+
 ## Command line
 
 ```bash

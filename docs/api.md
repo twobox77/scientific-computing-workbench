@@ -232,6 +232,46 @@ Every SCW error is a subclass of `SCWError`. The value-like ones
 them too. `ConvergenceError` (a failed ODE integration or iterative method)
 also subclasses `RuntimeError`.
 
+## `scw.visualization`
+
+Optional Matplotlib adapter, installed with the `visualization` extra. The core
+never imports Matplotlib; these helpers read domain objects and return the
+Matplotlib `Axes` they drew on (or a `(Figure, Axes)` pair from `new_figure`).
+Select a non-interactive backend (`matplotlib.use("Agg")`) before importing in
+headless environments.
+
+```python
+import matplotlib
+matplotlib.use("Agg")
+
+import numpy as np
+from scw.math_core import Matrix, Vector
+from scw.numerical import solve_ivp
+from scw.visualization import (
+    new_figure, new_3d_figure,
+    plot_vector, plot_vectors, plot_function, plot_vector_field,
+    plot_matrix, plot_ode_solution, plot_vectors_3d, plot_surface,
+)
+
+fig, ax = new_figure(figsize=(4, 4))
+plot_vector(Vector([2.0, 1.0]), ax=ax, label="v")
+
+plot_function(np.sin, (0.0, 2 * np.pi), samples=256)
+plot_vector_field(lambda x, y: (-y, x), (-2.0, 2.0), (-2.0, 2.0), normalize=True)
+plot_matrix(Matrix([[1.0, 2.0], [3.0, 4.0]]), annotate=True)
+plot_ode_solution(solve_ivp(lambda t, y: Vector(-y.data), (0.0, 5.0), Vector([1.0])))
+
+fig, ax = new_3d_figure()
+plot_vectors_3d([Vector([1.0, 0.0, 0.0]), Vector([0.0, 1.0, 1.0])], ax=ax)
+plot_surface(lambda x, y: np.sin(x) * np.cos(y), (-3.0, 3.0), (-3.0, 3.0))
+```
+
+Invalid input raises `TypeError` (non-`Vector`/`Matrix`, non-callable field),
+`DimensionError` (wrong vector dimension or field output shape) or
+`NumericalError` (bad range or too few samples). Importing
+`scw.visualization` without the extra raises an actionable `ImportError`. See
+[Visualization](mathematics/visualization.md).
+
 ## `scw.symbolic`
 
 Optional adapter over SymPy, installed with the `symbolic` extra. `SymbolicMatrix`

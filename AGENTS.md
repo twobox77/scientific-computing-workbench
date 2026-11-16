@@ -41,7 +41,9 @@ adapter 封裝，不得污染領域模型。
 
 - `src/scw/math_core/` — 數學領域核心（公開入口 `scw.math_core`）。
 - `src/scw/numerical/` — 數值演算法（SciPy adapter）。
-- `src/scw/symbolic/`、`visualization/`、`physics/`、`experiments/` — Phase 1 僅建立套件邊界。
+- `src/scw/symbolic/` — SymPy adapter（optional extra；只在此套件 import sympy）。
+- `src/scw/visualization/` — Matplotlib adapter（optional extra；只在此套件 import matplotlib）。
+- `src/scw/physics/`、`experiments/` — 尚未實作，Phase 1 僅建立套件邊界。
 - `src/scw/cli/` — 命令列入口（只解析參數、呼叫公開 API，不含數學演算法）。
 - `tests/{unit,property,integration,regression}/` — 單元、性質（Hypothesis）、整合、回歸測試。
 - `examples/` — 可執行範例（編號排序）；每個新功能至少補一個。
@@ -107,6 +109,11 @@ uv run pytest --cov=scw --cov-report=term-missing
   書寫，`METHODS` 列出可用積分器，支援 `t_eval`/`rtol`/`atol`/`dense_output`）。
   新例外：`NumericalError`（`ValueError`）、`ConvergenceError`（`RuntimeError`）。
   範例 `06_decompositions.py`、`07_ode_solving.py`。
+- **0.5** `scw.visualization` Matplotlib adapter（optional extra）：2D 的
+  `plot_vector`/`plot_vectors`/`plot_function`/`plot_vector_field`（`normalize`）/
+  `plot_matrix`（熱圖，可選 colorbar 與格值標註）/`plot_ode_solution`；3D 的
+  `new_3d_figure`/`plot_vectors_3d`/`plot_surface`；`new_figure` 回傳
+  `(Figure, Axes)`。範例 `08_visualization.py`。
 
 ### 數值層慣例（0.4 起）
 
@@ -118,6 +125,17 @@ uv run pytest --cov=scw --cov-report=term-missing
   有 ~1000× 餘裕）。
 - ODE 失敗屬執行期條件，用 `ConvergenceError`（`RuntimeError`）；形狀/維度問題才用
   `DimensionError`/`ShapeError`（`ValueError`）。`ODESolution.t`/`.y` 回唯讀視圖。
+
+### 繪圖層慣例（0.5 起）
+
+- Matplotlib **只**能在 `scw/visualization/` 內 import（集中在 `_backend.py` 的守衛
+  import）；領域層與數值層不得 import 繪圖，公開數學方法不得回傳 figure。
+- 每個繪圖函式回傳它畫上的 `Axes`（`new_figure`/`new_3d_figure` 回 `(Figure, Axes)`），
+  接受既有 `ax=` 以便共用座標軸；驗證輸入後才丟 `TypeError`/`DimensionError`/
+  `NumericalError`。
+- 測試用 `pytest.importorskip("matplotlib")` + `matplotlib.use("Agg")`（headless），
+  整檔在缺 extra 時跳過。繪圖程式碼列入 coverage omit（與 symbolic 一致）。
+- 範例輸出寫進 gitignored 的 `scw_plots/`，勿把 PNG 提交進 repo。
 
 ## 已知環境注意事項
 
