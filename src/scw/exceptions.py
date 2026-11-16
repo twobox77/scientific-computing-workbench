@@ -23,3 +23,7 @@ class ShapeError(SCWError, ValueError):
 
 class NonFiniteError(SCWError, ValueError):
     """Data contains NaN or infinite values."""
+
+
+class SymbolicError(SCWError, ValueError):
+    """A symbolic value cannot be turned into a numeric one, or vice versa."""

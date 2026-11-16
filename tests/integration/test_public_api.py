@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 import scw
 from scw.math_core import (
@@ -13,6 +14,7 @@ from scw.math_core import (
     Tensor,
     Vector,
     VectorSpace,
+    einsum,
 )
 
 
@@ -55,3 +57,22 @@ def test_tensor_matrix_bridge() -> None:
     v = Vector([1.0, 2.0], space=space)
     assert basis.from_coordinates(basis.to_coordinates(v)) == v
     assert np.allclose(a.apply(v).data, t.contract(Tensor(v.data)).data)
+
+
+def test_einsum_bridge_to_numpy() -> None:
+    a = Tensor([[1.0, 2.0], [3.0, 4.0]])
+    b = Tensor([[5.0, 6.0], [7.0, 8.0]])
+    assert np.allclose(einsum("ij,jk->ik", a, b).data, a.data @ b.data)
+
+
+def test_symbolic_round_trip_to_numeric() -> None:
+    pytest.importorskip("sympy")
+    from sympy import symbols
+
+    from scw.symbolic import SymbolicMatrix, to_symbolic
+
+    a, b = symbols("a b")
+    m = SymbolicMatrix([[a, 1], [2, b]]).subs({a: 4, b: 3})
+    assert m.to_numeric() == Matrix([[4.0, 1.0], [2.0, 3.0]])
+    numeric = Matrix([[2.0, 0.0], [0.0, 5.0]])
+    assert to_symbolic(numeric).to_numeric() == numeric

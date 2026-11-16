@@ -6,6 +6,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-16
+
+### Added
+
+- `scw.symbolic`: symbolic domain objects backed by SymPy (optional extra).
+  `SymbolicMatrix` and `SymbolicVector` convert to and from the numeric
+  `Matrix`/`Vector` (`to_numeric`, `from_numeric`, `to_symbolic`), support
+  `subs`, and report `free_symbols`.  Importing the package without the extra
+  raises an actionable `ImportError`.
+- `einsum`: named Einstein-summation contraction over `Tensor`s, the readable
+  form of `Tensor.contract` (validates subscripts, then delegates to NumPy).
+
+### Changed
+
+- `mypy` ignores missing stubs for `sympy` (it ships no `py.typed`).
+
 ## [0.2.0] - 2026-11-16
 
 ### Added
@@ -47,6 +63,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.1.0

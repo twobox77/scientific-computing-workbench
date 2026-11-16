@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "scw"
-version = "0.2.0"
+version = "0.3.0"
 description = "Scientific Computing Workbench"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -72,4 +72,8 @@ files = ["src/scw"]
 
 [[tool.mypy.overrides]]
 module = ["scipy.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["sympy.*"]
 ignore_missing_imports = true
