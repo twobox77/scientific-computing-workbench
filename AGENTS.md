@@ -6,11 +6,13 @@
 
 - 名稱：`twobox77/scientific-computing-workbench`（SCW，Scientific Computing Workbench）。
 - 用途：以 Python 為核心的**個人科學計算工作台**。自行定義數學語意與型別
-  （Vector / Covector / Matrix / LinearMap），底層數值運算交給 NumPy / SciPy。
+  （Vector / Covector / Matrix / LinearMap，0.2 起加 Tensor / Basis），底層數值運算交給 NumPy / SciPy。
 - 架構：**模組化單體（modular monolith）**，單一 repository，`src/` layout。
 - 介面：Python API、CLI（Typer）、Jupyter。
 - 授權：MIT。預設分支：`main`。
 - 規格來源：`docs/spec/SCW_1.0_Technical_Specification_and_Phase1_Plan.md`。
+- 結案：Phase 1 驗收報告在 `docs/phase1-acceptance.md`（§9 逐項對照）；
+  重跑全部驗收用 `bash scripts/verify_phase1.sh`。
 
 ## 對話前置步驟
 
@@ -42,6 +44,9 @@ adapter 封裝，不得污染領域模型。
 - `src/scw/symbolic/`、`visualization/`、`physics/`、`experiments/` — Phase 1 僅建立套件邊界。
 - `src/scw/cli/` — 命令列入口（只解析參數、呼叫公開 API，不含數學演算法）。
 - `tests/{unit,property,integration,regression}/` — 單元、性質（Hypothesis）、整合、回歸測試。
+- `examples/` — 可執行範例（編號排序）；每個新功能至少補一個。
+- `benchmarks/` — `timeit` 微基準，量測 SCW 相對 NumPy 的額外開銷。
+- `scripts/verify_phase1.sh` — 一鍵重跑 Phase 1 全部驗收（見 `docs/phase1-acceptance.md`）。
 - `docs/` — MkDocs Material 文件；`docs/spec/` 放規格正本。
 
 ## 品質閘門（每個 PR 必過）

@@ -21,15 +21,18 @@ mathematical objects, not a complete scientific library.
 Supported today:
 
 - `scw.math_core`: `VectorSpace`, `Vector`, `Covector`, `Matrix`, `LinearMap`,
-  with dimension/shape validation and read-only data access.
+  plus `Tensor` (order-r arrays, outer product, contraction, trace) and `Basis`
+  (coordinates), with dimension/shape validation and read-only data access.
 - `scw.numerical`: `solve`, `inverse`, `det` (SciPy-backed).
 - CLI: `scw version`, `scw doctor`.
 - Unit, property-based (Hypothesis), integration and regression tests.
+- Examples (`examples/`) and micro-benchmarks (`benchmarks/`).
 
-Not supported yet: tensors, symbolic calculus, ODE/PDE solvers, manifolds,
-physics simulation, plotting. See the roadmap in the specification.
+Not supported yet: symbolic calculus, ODE/PDE solvers, manifolds, physics
+simulation, plotting. See the roadmap in the specification.
 
 Documentation: [Public API](docs/api.md), [Development](docs/development.md),
+[Phase 1 acceptance](docs/phase1-acceptance.md),
 [Quickstart](docs/tutorials/quickstart.md).
 
 ## Install
@@ -41,7 +44,7 @@ uv sync --all-extras
 ## Use
 
 ```python
-from scw.math_core import Covector, LinearMap, Matrix, Vector
+from scw.math_core import Basis, Covector, LinearMap, Matrix, Tensor, Vector
 
 v = Vector([1.0, 2.0, 3.0])
 w = Vector([4.0, 5.0, 6.0])
@@ -53,11 +56,29 @@ alpha.evaluate(v)  # natural pairing alpha(v)
 
 t = LinearMap.from_matrix(Matrix([[1.0, 2.0], [3.0, 4.0]]))
 t.apply(Vector([1.0, 1.0]))
+
+a = Tensor([[1.0, 2.0], [3.0, 4.0]])
+a.outer(a)        # tensor product
+a.contract(a)     # contraction (matrix product here)
+float(a.trace())  # trace
+
+basis = Basis([Vector([1.0, 0.0]), Vector([1.0, 1.0])])
+basis.to_coordinates(Vector([3.0, 2.0]))   # coordinates in the basis
 ```
 
 ```bash
 uv run scw version
 uv run scw doctor
+```
+
+## Examples and benchmarks
+
+```bash
+uv run python examples/01_vectors_and_covectors.py
+uv run python examples/02_matrix_operations.py
+uv run python examples/03_tensor_operations.py
+uv run python examples/04_bases_and_coordinates.py
+uv run python benchmarks/bench_core.py
 ```
 
 ## Develop
@@ -68,6 +89,7 @@ uv run ruff check .
 uv run ruff format --check .
 uv run mypy src/scw
 uv run pre-commit install
+bash scripts/verify_phase1.sh   # full acceptance replay
 ```
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for conventions and quality gates, and

@@ -86,6 +86,49 @@ The representing matrix has `codomain.dimension` rows and
 `domain.dimension` columns. Passing explicit `domain=` / `codomain=` spaces
 whose dimensions disagree with the matrix raises `DimensionError`.
 
+### `Tensor`
+
+An order-`r` array of components. A scalar has order 0, a vector order 1, a
+matrix order 2.
+
+```python
+t = Tensor([[1.0, 2.0], [3.0, 4.0]])
+t.order, t.shape, t.size       # 2, (2, 2), 4
+t + u, t - u, -t, 2.0 * t      # same-shape arithmetic
+t.outer(u)                     # tensor product; order adds
+t.contract(u)                  # contract t's last axis with u's first
+t.contract(u, axis=0, other_axis=1)   # explicit axes
+t.trace()                      # contract axis 0 with axis 1
+t.trace(axis1=1, axis2=3)      # explicit axes for higher order
+Tensor.zeros((2, 3))           # zero tensor of a shape
+Tensor.eye(3)                  # order-2 identity
+```
+
+`outer` stacks indices (`a.outer(b)` has order `a.order + b.order`). `contract`
+requires the two contracted axes to have equal size and keeps the remaining
+indices in order (self first, then other); `Matrix @ Matrix` is the order-2
+case. `trace` requires two distinct, equally sized axes and a tensor of order
+at least 2. `*` between a tensor and another tensor/array raises `TypeError` —
+use `outer`.
+
+### `Basis`
+
+An ordered basis of a vector space, for converting between vectors and
+coordinates.
+
+```python
+b = Basis([Vector([1.0, 0.0]), Vector([1.0, 1.0])])
+b.dimension, len(b)            # 2
+b.vectors                      # the basis vectors, in order
+b.to_matrix()                  # columns are the basis vectors
+b.to_coordinates(v)            # coefficients of v in this basis
+b.from_coordinates([1.0, 2.0]) # rebuild the vector
+```
+
+Construction validates that the vectors share one space, that there are exactly
+`space.dimension` of them, and that they are linearly independent; violations
+raise `DimensionError`.
+
 ## `scw.numerical`
 
 SciPy-backed linear algebra on `Matrix` / `Vector` inputs:

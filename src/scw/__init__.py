@@ -6,14 +6,24 @@ Public entry point. The stable public surface for the first release is
 
 from __future__ import annotations
 
-from scw.math_core import Covector, LinearMap, Matrix, Vector, VectorSpace
+from scw.math_core import (
+    Basis,
+    Covector,
+    LinearMap,
+    Matrix,
+    Tensor,
+    Vector,
+    VectorSpace,
+)
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
+    "Basis",
     "Covector",
     "LinearMap",
     "Matrix",
+    "Tensor",
     "Vector",
     "VectorSpace",
     "__version__",

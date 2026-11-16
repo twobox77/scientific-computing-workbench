@@ -5,7 +5,15 @@ from __future__ import annotations
 import numpy as np
 
 import scw
-from scw.math_core import Covector, LinearMap, Matrix, Vector, VectorSpace
+from scw.math_core import (
+    Basis,
+    Covector,
+    LinearMap,
+    Matrix,
+    Tensor,
+    Vector,
+    VectorSpace,
+)
 
 
 def test_public_reexports() -> None:
@@ -14,6 +22,8 @@ def test_public_reexports() -> None:
     assert scw.Matrix is Matrix
     assert scw.LinearMap is LinearMap
     assert scw.VectorSpace is VectorSpace
+    assert scw.Tensor is Tensor
+    assert scw.Basis is Basis
 
 
 def test_version_is_a_string() -> None:
@@ -33,3 +43,15 @@ def test_end_to_end_workflow() -> None:
     v = Vector([1.0, 1.0])
     alpha = Covector([1.0, -1.0])
     assert alpha(t.apply(v)) == np.dot(alpha.data, a.data @ v.data)
+
+
+def test_tensor_matrix_bridge() -> None:
+    # A Matrix, a Tensor and a Basis describe the same linear object.
+    a = Matrix([[2.0, 1.0], [0.0, 3.0]])
+    t = Tensor(a.data)
+    assert np.allclose(t.contract(Tensor.eye(2)).data, a.data)
+    space = VectorSpace(2, name="V")
+    basis = Basis([Vector([1.0, 0.0], space=space), Vector([0.0, 1.0], space=space)])
+    v = Vector([1.0, 2.0], space=space)
+    assert basis.from_coordinates(basis.to_coordinates(v)) == v
+    assert np.allclose(a.apply(v).data, t.contract(Tensor(v.data)).data)
