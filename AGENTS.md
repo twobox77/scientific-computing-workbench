@@ -103,6 +103,9 @@ uv run pytest --cov=scw --cov-report=term-missing
 ## 開發慣例
 
 - 依賴管理：`uv`（提交 `uv.lock`，CI 用 `--frozen` 安裝）。
+- **更新既有工作區一律 `git pull`，不要重新 `git clone`**。clone 只在首次取得時用；
+  重複 clone 會在當前目錄多出同名資料夾（使用者 2026-11-16 實際踩到）。此規則寫在
+  `README.md` 的「取得與更新」與 `docs/offline.md` §0。
 - **`.pre-commit-config.yaml` 的 `ruff-pre-commit` rev 必須與 `uv.lock` 的 ruff 版本一致**。
   曾因 pre-commit 釘舊版（v0.6.9）而 uv.lock 是新版（0.17.5），在乾淨的樹上
   `pre-commit run --all-files` 冒出 `UP038`，CI 卻過——版本落差會製造假失敗。

@@ -18,6 +18,7 @@
 - [專案計畫](#專案計畫)
 - [目前進度](#目前進度)
 - [成果](#成果)
+- [取得與更新](#取得與更新)
 - [安裝](#安裝)
 - [使用](#使用)
 - [欣賞與操作（離線）](#欣賞與操作離線)
@@ -115,6 +116,27 @@ bash scripts/verify_phase1.sh
   [開發指南](docs/development.md)。
 - **[離線欣賞與操作指南](docs/offline.md)**：無網路時如何安裝、欣賞、操作、解除安裝。
 - **微基準**（[`benchmarks/`](benchmarks/)）：量測 SCW 相對 NumPy 的額外開銷。
+
+## 取得與更新
+
+**第一次**取得原始碼用 `git clone`；**之後更新一律用 `git pull`**，
+不要再 clone（重複 clone 只會在當前目錄多出一份同名資料夾）。
+
+```bash
+# 第一次（只需做一次）
+git clone https://github.com/twobox77/scientific-computing-workbench.git
+cd scientific-computing-workbench
+
+# 以後每次更新：進到同一份目錄，抓最新現況
+cd scientific-computing-workbench
+git pull
+```
+
+repo 為 **PUBLIC**，`git pull` 不需登入或 token。想先看不動檔案的遠端狀態，
+可 `git fetch origin` 後 `git log --oneline origin/main -5`；若本地有未提交
+變更導致 pull 被擋，用 `git stash && git pull && git stash pop`。
+完整說明（含離線、用 Release 壓縮包等替代來源）見
+[離線指南 §0](docs/offline.md#0-取得原始碼並進入專案目錄)。
 
 ## 安裝
 
