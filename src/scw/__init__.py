@@ -14,6 +14,7 @@ from scw.math_core import (
     Tensor,
     Vector,
     VectorSpace,
+    einsum,
 )
 
 __version__ = "0.2.0"
@@ -27,4 +28,5 @@ __all__ = [
     "Vector",
     "VectorSpace",
     "__version__",
+    "einsum",
 ]

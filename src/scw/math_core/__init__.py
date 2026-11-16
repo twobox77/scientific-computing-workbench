@@ -12,7 +12,7 @@ from scw.math_core.covector import Covector
 from scw.math_core.linear_map import LinearMap
 from scw.math_core.matrix import Matrix
 from scw.math_core.spaces import VectorSpace
-from scw.math_core.tensor import Tensor
+from scw.math_core.tensor import Tensor, einsum
 from scw.math_core.vector import Vector
 
 __all__ = [
@@ -23,4 +23,5 @@ __all__ = [
     "Tensor",
     "Vector",
     "VectorSpace",
+    "einsum",
 ]

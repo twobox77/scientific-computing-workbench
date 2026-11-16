@@ -11,7 +11,7 @@ import numpy as np
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from scw.math_core import Tensor
+from scw.math_core import Tensor, einsum
 
 floats = st.floats(
     min_value=-1e2,
@@ -109,3 +109,17 @@ def test_shape_preserved_under_operations(a: Tensor) -> None:
     assert (a + a).shape == a.shape
     assert (2.0 * a).shape == a.shape
     assert (-a).shape == a.shape
+
+
+@settings(max_examples=200, deadline=None)
+@given(a=matrices(), b=matrices())
+def test_einsum_matches_numpy_and_contract(a: Tensor, b: Tensor) -> None:
+    assert_close(einsum("ij,jk->ik", a, b).data, np.einsum("ij,jk->ik", a.data, b.data))
+    assert_close(einsum("ij,jk->ik", a, b).data, a.contract(b).data)
+
+
+@settings(max_examples=200, deadline=None)
+@given(a=matrices())
+def test_einsum_transpose_and_trace_match_numpy(a: Tensor) -> None:
+    assert_close(einsum("ij->ji", a).data, a.data.T)
+    assert_close(einsum("ii->", a).data, np.array(np.trace(a.data)))

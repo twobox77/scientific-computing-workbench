@@ -178,3 +178,55 @@ class Tensor:
 
     def __repr__(self) -> str:
         return f"Tensor(shape={self.shape}, data={self._data!r})"
+
+
+def _parse_subscripts(subscripts: str, operands: tuple[Tensor, ...]) -> None:
+    """Validate an einsum ``subscripts`` string against the operands.
+
+    Raises :class:`ShapeError` when the spec is malformed or an operand has the
+    wrong order, so callers get an SCW error rather than a bare NumPy one.
+    """
+    if not isinstance(subscripts, str):
+        raise TypeError("subscripts must be a string")
+    if "->" in subscripts:
+        left, right = subscripts.split("->", 1)
+        right = right.strip()
+    else:
+        left, right = subscripts, None
+    terms = [term.strip() for term in left.split(",")]
+    if len(terms) != len(operands):
+        raise ShapeError(
+            f"subscripts describe {len(terms)} operands but {len(operands)} were given"
+        )
+    for term, operand in zip(terms, operands, strict=True):
+        if len(term) != operand.order:
+            raise ShapeError(
+                f"subscript '{term}' has {len(term)} indices but the operand has "
+                f"order {operand.order}"
+            )
+    labels = "".join(terms) + (right or "")
+    if not all(c.isalpha() for c in labels):
+        raise ShapeError("subscripts may only contain alphabetic index labels")
+
+
+def einsum(subscripts: str, *operands: Tensor) -> Tensor:
+    """Evaluate an Einstein-summation ``subscripts`` expression over tensors.
+
+    This is the named, readable form of :meth:`Tensor.contract`::
+
+        einsum("ij,jk->ik", a, b)      # matrix product
+        einsum("ii->i", a)             # diagonal
+        einsum("ij->ji", a)            # transpose
+        einsum("i,j->ij", u, v)        # outer product
+
+    The result is always a :class:`Tensor` (a scalar expression yields an
+    order-0 tensor).  The subscripts string and operand orders are validated
+    first; the arithmetic is delegated to :func:`numpy.einsum`.
+    """
+    if not operands:
+        raise ShapeError("einsum needs at least one operand")
+    if not all(isinstance(op, Tensor) for op in operands):
+        raise TypeError("einsum operands must be Tensor objects")
+    _parse_subscripts(subscripts, operands)
+    result = np.einsum(subscripts, *(op.data for op in operands))
+    return Tensor(np.asarray(result, dtype=DEFAULT_DTYPE))
