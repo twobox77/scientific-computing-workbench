@@ -5,3 +5,11 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+  - repo: local
+    hooks:
+      - id: sync-progress
+        name: sync README progress table
+        entry: python scripts/sync_progress.py
+        language: system
+        files: ^(README\.md|CHANGELOG\.md|docs/spec/.*\.md)$
+        pass_filenames: false

@@ -186,7 +186,12 @@ uv run pytest --cov=scw --cov-report=term-missing
   （範例／notebook／gallery／離線指南），並含安裝／使用／解除安裝。
 - 其餘文件（`docs/api.md`、`docs/development.md` 等）與程式碼註解維持英文；
   中文長篇說明集中在 `docs/offline.md` 與 README。
-- 更新進度時：先改 `CHANGELOG.md`，再同步 README 的版本狀態表與 release。
+- 更新進度時：先改 `CHANGELOG.md`，再執行
+  `uv run python scripts/sync_progress.py` 重生成 README 的版本狀態表
+  （表格夾在 `<!-- progress:start -->` / `<!-- progress:end -->` 之間，**勿手改**；
+  CI 與 pre-commit 會用 `--check` 擋下忘記同步的提交）。
+  表格由規格 §11（版本與里程碑措辭）+ `CHANGELOG.md`（有日期段者視為已發行）
+  產生；已發行版的中文一句說明在 `scripts/sync_progress.py` 的 `MILESTONES`。
 
 ## 發行說明（每個版本都要附中文指南）
 

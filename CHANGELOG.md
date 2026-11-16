@@ -20,6 +20,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the project plan, per-version progress and the works, each linking to its
   source (spec, acceptance report, changelog, releases, examples, notebooks,
   gallery, offline guide).  `docs/index.md` is rewritten to match.
+- `scripts/sync_progress.py`: generates the README progress table from the
+  specification roadmap (§11) and `CHANGELOG.md`, so a new release cannot leave
+  the landing page stale.  `--check` runs in CI and a pre-commit hook keeps it
+  current locally.
 - `interactive` extra (`matplotlib` + `jupyterlab` + `ipykernel` + `ipympl`) and
   `notebooks/03_manifolds_interactive.ipynb`: a draggable/zoomable 3D view of
   the round sphere with sliders for the base point.

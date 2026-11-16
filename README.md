@@ -45,8 +45,9 @@ Phase 1 已完成並結案，逐項證據在
 bash scripts/verify_phase1.sh
 ```
 
-各版本狀態（點版本號可看該版 release 與中文說明）：
+各版本狀態（由 `scripts/sync_progress.py` 產生，勿手改；點版本號可看該版 release 與中文說明）：
 
+<!-- progress:start -->
 | 版本 | 里程碑內容 | 狀態 |
 | --- | --- | --- |
 | [0.1.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.1.0) | 工程骨架 + 數學核心（`VectorSpace` / `Vector` / `Covector` / `Matrix` / `LinearMap`） | ✅ 已發行 |
@@ -55,10 +56,11 @@ bash scripts/verify_phase1.sh
 | [0.4.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.4.0) | `scw.numerical`：線性系統、分解（LU/QR/SVD/Cholesky/eigh）、ODE solver | ✅ 已發行 |
 | [0.5.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.5.0) | `scw.visualization`：Matplotlib adapter（2D/3D 繪圖） | ✅ 已發行 |
 | [0.6.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.6.0) | `scw.manifold`：切／餘切空間、metric、`flat` / `sharp` | ✅ 最新 |
-| 0.7.0 | Physics models 與 simulation | ⏳ 規劃中 |
-| 0.8.0 | Experiment tracking、資料集與可重現性 | ⏳ 規劃中 |
-| 0.9.0 | API 穩定化、效能基準、文件補齊 | ⏳ 規劃中 |
+| 0.7 | Physics models 與 simulation | ⏳ 規劃中 |
+| 0.8 | Experiment tracking、資料集與可重現性 | ⏳ 規劃中 |
+| 0.9 | API 穩定化、效能基準、文件補齊 | ⏳ 規劃中 |
 | 1.0 | 穩定公開 API、完整安裝與使用文件、CI 發佈流程 | ⏳ 規劃中 |
+<!-- progress:end -->
 
 目前已支援（摘要）：
 
