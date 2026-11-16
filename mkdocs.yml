@@ -1,0 +1,15 @@
+site_name: SCW — Scientific Computing Workbench
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Tutorials:
+      - Quickstart: tutorials/quickstart.md
+  - Mathematics:
+      - Vector spaces: mathematics/vector-spaces.md
+  - Architecture:
+      - Decisions: architecture/decisions.md
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences

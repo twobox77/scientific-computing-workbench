@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scw"
+version = "0.1.0"
+description = "Scientific Computing Workbench"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "twobox77" }]
+dependencies = [
+  "numpy>=2.0",
+  "scipy>=1.13",
+  "typer>=0.12",
+]
+
+[project.optional-dependencies]
+symbolic = ["sympy>=1.13"]
+visualization = ["matplotlib>=3.9"]
+notebook = ["jupyterlab>=4.2", "ipykernel>=6.29"]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "hypothesis>=6.100",
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pre-commit>=3.8",
+  "mkdocs-material>=9.5",
+]
+
+[project.scripts]
+scw = "scw.cli.app:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scw"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+  "slow: long-running tests",
+  "integration: integration tests",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.coverage.run]
+source = ["scw"]
+omit = [
+  "src/scw/__main__.py",
+  "src/scw/experiments/*",
+  "src/scw/physics/*",
+  "src/scw/symbolic/*",
+  "src/scw/visualization/*",
+]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+check_untyped_defs = true
+files = ["src/scw"]
+
+[[tool.mypy.overrides]]
+module = ["scipy.*"]
+ignore_missing_imports = true
