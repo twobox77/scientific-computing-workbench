@@ -5,36 +5,47 @@
 
 ## 0. 取得原始碼並進入專案目錄
 
-`uv` 必須在**有 `pyproject.toml` 的目錄**執行。請先把原始碼放到磁碟，再 `cd` 進去；
-以下三種來源任選一種。
+`uv` 必須在**有 `pyproject.toml` 的目錄**執行。先確認你是否已經有原始碼：
 
-**A. 用 git 取得（有網路時）**
+```bash
+ls pyproject.toml        # 有列出檔案 → 你已經在專案目錄內，直接跳到「0.5 安裝依賴」
+```
+
+若還沒取得，選下面任一種。**三種來源的前置條件不同**，請照各自的說明做：
+
+**A. 用 git 取得**（需要網路 + 對本 repo 的存取權；本 repo 為 private）
 
 ```bash
 git clone https://github.com/twobox77/scientific-computing-workbench.git
 cd scientific-computing-workbench        # ← 一定要進來，這裡才有 pyproject.toml
 ```
 
-**B. 用 Release 的原始碼壓縮包（`scw-0.6.0.tar.gz`）**
+- private repo，需要 GitHub 帳號權限；未設定好會要你輸入帳密或 Personal Access Token。
+- 若目錄 `scientific-computing-workbench/` **已存在**（例如之前 clone 過），
+  **不要再跑 `git clone`**，直接 `cd` 進去就好：
 
 ```bash
+cd scientific-computing-workbench
+git pull                                 # 想更新到最新時
+```
+
+**B. 用 Release 的原始碼壓縮包**（必須先下載檔案到**當前目錄**）
+
+先從本頁下方 Assets 下載 `scw-0.6.0.tar.gz` 到當前目錄，再：
+
+```bash
+ls scw-0.6.0.tar.gz                      # 確認檔案在，否則下一步會「無法 open」
 tar xzf scw-0.6.0.tar.gz                 # 解開後目錄名為 scw-0.6.0/
 cd scw-0.6.0                             # ← 一定要進來
 ```
 
-**C. 只安裝套件（不跑範例／文件／notebook）**
+**C. 只安裝套件**（必須先下載 `.whl`；不跑範例／文件／notebook）
 
 ```bash
 uv pip install scw-0.6.0-py3-none-any.whl   # 或 uv pip install scw-0.6.0.tar.gz
 ```
 
 > 只有 A、B 兩種（原始碼）能跑範例、文件站與 notebook；C 只裝套件。
-
-確認你人在正確目錄：
-
-```bash
-ls pyproject.toml        # 有列出檔案才對；沒有就是走錯目錄了
-```
 
 ## 0.5 安裝依賴（一次性）
 
@@ -48,14 +59,24 @@ uv sync --all-extras --frozen      # 安裝全部依賴（含繪圖 / notebook /
 （`uv cache dir`），再把整個 `.venv/`（或 uv 快取）複製到離線機器。
 離線機器上之後的指令都要在**同一個專案目錄**內執行。
 
-### 常見錯誤：`No pyproject.toml found in current directory or any parent directory`
+### 常見錯誤
 
-代表你**不在專案目錄內**（例如還停在 `~` 家目錄）。先 `cd` 進去再重跑：
+- `No pyproject.toml found in current directory or any parent directory`
+  → 你**不在專案目錄內**（例如還停在 `~`）。先 `cd` 進去再重跑：
 
-```bash
-cd scientific-computing-workbench   # 或 cd scw-0.6.0（依你的來源）
-uv sync --all-extras --frozen
-```
+  ```bash
+  cd scientific-computing-workbench   # 或 cd scw-0.6.0（依你的來源）
+  uv sync --all-extras --frozen
+  ```
+
+- `fatal: destination path 'scientific-computing-workbench' already exists and is not an empty directory`
+  （中文：目的地路徑已存在，並且不是一個空目錄）
+  → 目錄已存在，**不必再 clone**。直接 `cd scientific-computing-workbench`；
+  要更新就 `git pull`。想重新 clone 請先把舊目錄改名或刪除。
+
+- `tar (child): scw-0.6.0.tar.gz: Cannot open: No such file or directory`
+  （中文：無法 open：沒有此一檔案或目錄）
+  → 你還沒把壓縮包**下載到當前目錄**。先從 Release Assets 下載，或改用 git（A）。
 
 ## 1. 純文字：跑範例、看數值
 
