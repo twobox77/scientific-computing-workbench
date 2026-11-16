@@ -12,6 +12,9 @@ uv sync --all-extras --frozen
 echo "== lint =="
 uv run ruff check .
 
+echo "== complexity guard =="
+uv run python scripts/complexity_guard.py
+
 echo "== format =="
 uv run ruff format --check .
 

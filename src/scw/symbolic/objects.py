@@ -55,6 +55,7 @@ class SymbolicVector:
     def free_symbols(self) -> set[Any]:
         """The set of free symbols appearing in the components."""
         result: set[Any] = set()
+        # complexity: SymPy expressions are scalar; this loop is the only way
         for entry in self._entries:
             result |= entry.free_symbols
         return result

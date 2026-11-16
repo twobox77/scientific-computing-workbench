@@ -22,6 +22,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - `mypy` ignores missing stubs for `sympy` (it ships no `py.typed`).
 
+### Tooling
+
+- Complexity guard (`scripts/complexity_guard.py`, wired into CI): a static AST
+  check that fails on any core `for`/`while` loop not justified with a
+  `# complexity:` note, catching accidental O(n) Python rewrites of vectorized
+  operations.
+
 ## [0.2.0] - 2026-11-16
 
 ### Added

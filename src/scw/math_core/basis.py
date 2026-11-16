@@ -35,6 +35,7 @@ class Basis:
         if not all(isinstance(v, Vector) for v in vecs):
             raise TypeError("a basis is built from Vector objects")
         space: VectorSpace = vecs[0].space
+        # complexity: iterates the basis vectors (metadata), not data elements
         for v in vecs:
             if v.space != space:
                 raise DimensionError(

@@ -198,6 +198,7 @@ def _parse_subscripts(subscripts: str, operands: tuple[Tensor, ...]) -> None:
         raise ShapeError(
             f"subscripts describe {len(terms)} operands but {len(operands)} were given"
         )
+    # complexity: iterates the subscripts/operands (metadata), not data elements
     for term, operand in zip(terms, operands, strict=True):
         if len(term) != operand.order:
             raise ShapeError(

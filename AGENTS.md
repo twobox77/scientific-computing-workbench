@@ -53,10 +53,17 @@ adapter 封裝，不得污染領域模型。
 
 ```bash
 uv run ruff check .
+uv run python scripts/complexity_guard.py
 uv run ruff format --check .
 uv run mypy src/scw
 uv run pytest --cov=scw --cov-report=term-missing
 ```
+
+- **複雜度護欄**（`scripts/complexity_guard.py`，CI 已接）：核心模組不得出現
+  **未標註理由的 `for`/`while` 迴圈**——逐元素迴圈是「把向量化運算改寫成 O(n) Python」
+  的徵兆。若迴圈只迭代小型中介資料（basis 向量清單、einsum 下標詞）或 SymPy 純量運算，
+  在迴圈上一行加 `# complexity: <理由>` 即可放行。採 **AST 靜態檢查**：決定性、瞬時、
+  不需執行或追蹤（先前試過 `sys.settrace` 版本，在 pytest-cov 程序內會拖垮沙盒，已棄用）。
 
 - 核心數學模組測試覆蓋率**至少 90%**。
 - 浮點比較一律用容差（`numpy.testing.assert_allclose`），不得用精確相等。
