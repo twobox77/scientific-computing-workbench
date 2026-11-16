@@ -21,15 +21,20 @@ mathematical objects, not a complete scientific library.
 Supported today:
 
 - `scw.math_core`: `VectorSpace`, `Vector`, `Covector`, `Matrix`, `LinearMap`,
-  plus `Tensor` (order-r arrays, outer product, contraction, trace) and `Basis`
-  (coordinates), with dimension/shape validation and read-only data access.
+  plus `Tensor` (order-r arrays, outer product, contraction, trace, `einsum`)
+  and `Basis` (coordinates), with dimension/shape validation and read-only data
+  access.
 - `scw.numerical`: `solve`, `inverse`, `det` (SciPy-backed).
+- `scw.symbolic` (optional `symbolic` extra): `SymbolicMatrix` / `SymbolicVector`
+  over SymPy, with explicit conversion to and from the numeric types.
 - CLI: `scw version`, `scw doctor`.
 - Unit, property-based (Hypothesis), integration and regression tests.
 - Examples (`examples/`) and micro-benchmarks (`benchmarks/`).
+- CI complexity guard (`scripts/complexity_guard.py`) keeping per-element loops
+  out of the core.
 
-Not supported yet: symbolic calculus, ODE/PDE solvers, manifolds, physics
-simulation, plotting. See the roadmap in the specification.
+Not supported yet: symbolic calculus (integration/limits), ODE/PDE solvers,
+manifolds, physics simulation, plotting. See the roadmap in the specification.
 
 Documentation: [Public API](docs/api.md), [Development](docs/development.md),
 [Phase 1 acceptance](docs/phase1-acceptance.md),

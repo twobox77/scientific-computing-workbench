@@ -111,6 +111,12 @@ case. `trace` requires two distinct, equally sized axes and a tensor of order
 at least 2. `*` between a tensor and another tensor/array raises `TypeError` —
 use `outer`.
 
+For readability, `einsum("ij,jk->ik", a, b)` performs the same contraction as
+`a.contract(b)` using Einstein-summation subscripts. It validates the
+subscript string and operand orders, then delegates to `numpy.einsum`; a
+repeated index not appearing in the output is summed, an index appearing only
+in the output is broadcast.
+
 ### `Basis`
 
 An ordered basis of a vector space, for converting between vectors and
@@ -153,6 +159,28 @@ from scw.exceptions import SCWError, DimensionError, ShapeError, NonFiniteError
 Every SCW error is a subclass of `SCWError`; the value-like ones
 (`DimensionError`, `ShapeError`, `NonFiniteError`) also subclass `ValueError`,
 so `except ValueError` catches them too.
+
+## `scw.symbolic`
+
+Optional adapter over SymPy, installed with the `symbolic` extra. `SymbolicMatrix`
+and `SymbolicVector` hold exact expressions and convert explicitly:
+
+```python
+from sympy import symbols
+from scw.symbolic import SymbolicMatrix, to_symbolic
+
+a, b = symbols("a b")
+m = SymbolicMatrix([[a, 1], [2, b]])
+m.free_symbols                 # {a, b}
+m.subs({a: 4, b: 3}).to_numeric()   # -> scw Matrix([[4, 1], [2, 3]])
+m.to_sympy().det()             # a*b - 2  (SymPy's own algebra)
+to_symbolic(Matrix([[2.0, 0.0], [0.0, 5.0]]))   # lift a numeric matrix
+```
+
+`to_numeric()` / `to_numpy()` raise `SymbolicError` while any free symbol
+remains. Importing `scw.symbolic` without the extra raises an actionable
+`ImportError`; the numeric core never imports SymPy. See
+[Symbolic algebra](mathematics/symbolic.md).
 
 ## Command line
 
