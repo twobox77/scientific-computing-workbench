@@ -13,14 +13,16 @@ ls pyproject.toml        # 有列出檔案 → 你已經在專案目錄內，直
 
 若還沒取得，選下面任一種。**三種來源的前置條件不同**，請照各自的說明做：
 
-**A. 用 git 取得**（需要網路 + 對本 repo 的存取權；本 repo 為 private）
+**A. 用 git 取得**（需要網路；repo 若為 private 另需存取權）
 
 ```bash
 git clone https://github.com/twobox77/scientific-computing-workbench.git
 cd scientific-computing-workbench        # ← 一定要進來，這裡才有 pyproject.toml
 ```
 
-- private repo，需要 GitHub 帳號權限；未設定好會要你輸入帳密或 Personal Access Token。
+- 若 repo 為 **public**：直接 clone 即可，不需登入。
+- 若 repo 為 **private**：需 GitHub 帳號權限；未設定好會要你輸入帳密或
+  Personal Access Token。要把 private 改成 public，見 §6。
 - 若目錄 `scientific-computing-workbench/` **已存在**（例如之前 clone 過），
   **不要再跑 `git clone`**，直接 `cd` 進去就好：
 
@@ -183,3 +185,24 @@ rm -rf scientific-computing-workbench/     # 或 scw-<version>/
 ```
 
 若只是想解除安裝**套件**（不是原始碼）：`uv pip uninstall scw`。
+
+## 6. 把 repo 改成公開（private → public）
+
+公開後 clone、下載 Release 圖片與壓縮包都不再需要登入，分享與教學更方便。
+
+**在 GitHub 網頁操作（最簡單、必定可行）**：
+
+1. 開 `https://github.com/twobox77/scientific-computing-workbench/settings`
+2. 捲到最下方 **Danger Zone** → **Change repository visibility** → **Make public**
+3. 依指示輸入 repo 名稱確認
+
+**用 CLI**（需要 token 具備 `administration:write` 權限）：
+
+```bash
+gh repo edit twobox77/scientific-computing-workbench \
+  --visibility public --accept-visibility-change-consequences
+```
+
+> 注意：fine-grained token 若沒有 `administration:write`，上述指令會回
+> `403 Resource not accessible`。此時請改用網頁操作，或換一支具該權限的 token。
+> 公開前建議先確認 repo 內沒有金鑰、密碼或私密資料。

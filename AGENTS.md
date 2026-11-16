@@ -183,4 +183,9 @@ uv run pytest --cov=scw --cov-report=term-missing
 
 - 沙盒內建 `GITHUB_TOKEN`（`ghu_`）與 `GITHUB_PERSONAL_ACCESS_TOKEN`（`github_pat_`）
   皆為 **fine-grained**；建立 repo 需具備對應權限（見 test-repo 的 AGENTS.md 記載）。
+- **改 repo 可見性（private↔public）需要 `administration=write`**，沙盒的 fine-grained
+  token 未具備此 scope：`gh repo edit --visibility public` 與
+  `PATCH /repos/{owner}/{repo}` 皆回 `403 Resource not accessible`。
+  解法只能由使用者在 GitHub 網頁（Settings → General → Danger Zone →
+  Change visibility）手動切換，或換一支具 `administration:write` 的 token。
 - 沙盒 LLM proxy 可能對 `/chat/completions` 回 403；本專案 Phase 1 不需要 LLM。
