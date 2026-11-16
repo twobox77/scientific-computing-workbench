@@ -32,6 +32,10 @@ Supported today:
 - `scw.visualization` (optional `visualization` extra): Matplotlib adapters —
   2D vectors, function curves, vector fields, matrix heat maps, ODE solutions
   and 3D vectors / surfaces. The core never imports Matplotlib.
+- `scw.manifold`: tangent/cotangent spaces and the metric tensor.
+  `EuclideanSpace` and `Sphere` carry a Riemannian metric; `Metric` gives
+  `inner`, `norm` and the musical isomorphisms `flat` / `sharp`. Tangent
+  vectors are ordinary `Vector`s that know their base point.
 - CLI: `scw version`, `scw doctor`.
 - Unit, property-based (Hypothesis), integration and regression tests.
 - Examples (`examples/`) and micro-benchmarks (`benchmarks/`).
@@ -39,7 +43,7 @@ Supported today:
   out of the core.
 
 Not supported yet: symbolic calculus (integration/limits), PDE solvers,
-manifolds, physics simulation. See the roadmap in the specification.
+physics simulation. See the roadmap in the specification.
 
 Documentation: [Public API](docs/api.md), [Development](docs/development.md),
 [Phase 1 acceptance](docs/phase1-acceptance.md),

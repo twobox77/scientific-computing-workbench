@@ -6,6 +6,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-16
+
+### Added
+
+- `scw.manifold`: curvature-aware geometry on top of the flat core.
+  - `TangentSpace` and `CotangentSpace` are `VectorSpace`s that carry the
+    manifold and base point, so a vector in `T_pM` and one in `T_qM` (`p != q`)
+    are rejected by the existing dimension/space checks.  Tangent vectors are
+    ordinary `Vector`s; cotangent covectors are ordinary `Covector`s.
+  - `Manifold` (ABC) with `EuclideanSpace(n)` (identity metric) and
+    `Sphere(radius)` (round `S^2`, chart `(theta, phi)`, metric
+    `diag(r^2, r^2 sin^2 theta)`; poles excluded).
+  - `Metric`: wraps the symmetric positive-definite components, validating them
+    on construction, and provides `inner`, `norm` (via the Cholesky factor) and
+    the musical isomorphisms `flat` (lower an index) and `sharp` (raise one).
+  - `Manifold.tangent_vector` / `cotangent_covector` build typed objects at a
+    point.
+- Example `09_manifolds.py`.
+
 ## [0.5.0] - 2026-11-16
 
 ### Added

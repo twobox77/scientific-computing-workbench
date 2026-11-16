@@ -40,6 +40,11 @@ adapter 封裝，不得污染領域模型。
 ## 目錄結構
 
 - `src/scw/math_core/` — 數學領域核心（公開入口 `scw.math_core`）。
+- `src/scw/manifold/` — 流形幾何：`spaces.py`（`TangentSpace`/`CotangentSpace`，
+  皆為 `VectorSpace` 子類，帶 `manifold`+`point`）、`metric.py`（`Metric`：
+  SPD 驗證、`inner`/`norm`、`flat`/`sharp`）、`manifold.py`（`Manifold` ABC、
+  `EuclideanSpace`、`Sphere`）。只依賴 `math_core` 與 `scw.exceptions`，
+  **不得** import CLI/繪圖/檔案系統。
 - `src/scw/numerical/` — 數值演算法（SciPy adapter）。
 - `src/scw/symbolic/` — SymPy adapter（optional extra；只在此套件 import sympy）。
 - `src/scw/visualization/` — Matplotlib adapter（optional extra；只在此套件 import matplotlib）。
@@ -99,6 +104,24 @@ uv run pytest --cov=scw --cov-report=term-missing
 0.6 Manifold → 0.7 Physics → 0.8 Experiments → 0.9 API 穩定化 → 1.0 穩定。
 版本以驗收條件與模組成熟度決定，不按日曆。
 
+## 設計備忘
+
+- **切空間用 dataclass 繼承，不用 wrapper**（0.6）：`TangentSpace`/`CotangentSpace`
+  直接 `@dataclass(frozen=True, kw_only=True)` 繼承 `VectorSpace`，多帶
+  `manifold`+`point` 兩個欄位。`kw_only=True` 是必須的——否則子類欄位沒有預設值
+  會撞上父類有預設值的欄位（`name`），dataclass 會直接 `TypeError`。因為「點」
+  進入空間的 `__eq__`/`__hash__`，不同點的切向量自然被既有的 space 檢查擋下，
+  不必另外寫驗證。回顧：曾考慮 wrapper（Approach B），但會失去「切向量就是
+  `Vector`」的互通性。
+- **`Manifold` ABC 的 `dimension` 用純註解、不掛 `@property @abstractmethod`**：
+  若父類把 `dimension` 定義成抽象 property，子類就無法用 dataclass 欄位實作它
+  （`TypeError: Can't instantiate abstract class`）。改法：父類只寫
+  `dimension: int` 註解（mypy 看得到型別），子類用 `field(init=False, default=...)`
+  提供值。mypy 另會抱怨「writeable attribute 被 read-only property 覆寫」，這也是
+  不用 property 的理由之一。
+- **`Metric.norm` 走 Cholesky 因式**：`G = L L^T`，長度取 `|L^T v|`，避免對 `G`
+  直接開平方而把條件數平方。
+
 ### 已完成的里程碑
 
 - **0.2** Tensor / Basis。
@@ -114,6 +137,11 @@ uv run pytest --cov=scw --cov-report=term-missing
   `plot_matrix`（熱圖，可選 colorbar 與格值標註）/`plot_ode_solution`；3D 的
   `new_3d_figure`/`plot_vectors_3d`/`plot_surface`；`new_figure` 回傳
   `(Figure, Axes)`。範例 `08_visualization.py`。
+- **0.6** `scw.manifold` 流形幾何：`TangentSpace`/`CotangentSpace`（`VectorSpace`
+  子類，帶 `manifold`+`point`，不同點互不相容）、`Metric`（SPD 驗證、
+  `inner`/`norm`、`flat`/`sharp` 音樂同構）、`Manifold` ABC +
+  `EuclideanSpace(n)`（單位 metric）+ `Sphere(radius)`（球面座標，標準 metric，
+  兩極排除）。範例 `09_manifolds.py`。
 
 ### 數值層慣例（0.4 起）
 

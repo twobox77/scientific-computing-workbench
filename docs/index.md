@@ -11,4 +11,5 @@ Contributors should read [Development](development.md); the
 
 The [numerical methods](mathematics/numerical-methods.md) page covers the
 factorizations and the ODE solver; the [visualization](mathematics/visualization.md)
-page covers the optional Matplotlib adapter.
+page covers the optional Matplotlib adapter; the [manifolds](mathematics/manifolds.md)
+page covers tangent spaces and metrics.

@@ -58,6 +58,25 @@ plot_function(np.sin, (0.0, 2 * np.pi), samples=256)
 fig.savefig("plot.png", dpi=120)
 ```
 
+## Manifolds
+
+Tangent and cotangent vectors know their base point, and the metric gives the
+musical isomorphisms between them.
+
+```python
+from scw.manifold import EuclideanSpace, Sphere
+
+plane = EuclideanSpace(2)
+p = (1.0, -2.0)
+v = plane.tangent_vector([1.0, 0.0], point=p)   # a Vector in T_pM
+g = plane.metric(p)
+g.inner(v, v)                                    # 1.0
+g.sharp(g.flat(v)).data                          # flat lowers, sharp raises
+
+sphere = Sphere(radius=2.0)                      # round S^2, chart (theta, phi)
+sphere.metric((3.14159 / 2, 0.0)).components     # diag(4, 4) at the equator
+```
+
 ## Command line
 
 ```bash

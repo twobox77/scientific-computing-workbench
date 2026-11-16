@@ -272,6 +272,37 @@ Invalid input raises `TypeError` (non-`Vector`/`Matrix`, non-callable field),
 `scw.visualization` without the extra raises an actionable `ImportError`. See
 [Visualization](mathematics/visualization.md).
 
+## `scw.manifold`
+
+Curvature-aware geometry on top of the flat core (roadmap §11, 0.6).  A
+`TangentSpace` *is* a `VectorSpace`, so tangent vectors are ordinary `Vector`
+objects that additionally know their base point — operations reject mixing
+`T_pM` and `T_qM` when `p != q`.  `Metric` wraps the symmetric positive-definite
+matrix of the metric and provides `inner`, `norm` and the musical isomorphisms
+`flat` / `sharp`.
+
+```python
+import numpy as np
+from scw.manifold import EuclideanSpace, Sphere
+
+plane = EuclideanSpace(3, name="E")
+p = (1.0, 2.0, 3.0)
+v = plane.tangent_vector([1.0, 0.0, 0.0], point=p)     # Vector in T_pM
+alpha = plane.cotangent_covector([1.0, 0.0, 0.0], point=p)  # Covector in T*_pM
+
+g = plane.metric(p)          # identity metric
+g.inner(v, v)                # 1.0
+g.sharp(g.flat(v)).data      # flat lowers, sharp raises: back to v
+
+sphere = Sphere(radius=2.0)  # round S^2, chart (theta, phi)
+gs = sphere.metric((np.pi / 2, 0.0))
+gs.components                # diag(4, 4) at the equator
+```
+
+A `Metric` validates its components (symmetric, positive definite) and raises
+`NumericalError` otherwise; a point at a sphere pole raises `DimensionError`.
+See [Manifolds](mathematics/manifolds.md).
+
 ## `scw.symbolic`
 
 Optional adapter over SymPy, installed with the `symbolic` extra. `SymbolicMatrix`

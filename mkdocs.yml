@@ -11,6 +11,7 @@ nav:
       - Numerical methods: mathematics/numerical-methods.md
       - Symbolic algebra: mathematics/symbolic.md
       - Visualization: mathematics/visualization.md
+      - Manifolds: mathematics/manifolds.md
   - Architecture:
       - Decisions: architecture/decisions.md
   - Development: development.md
