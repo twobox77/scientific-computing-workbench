@@ -52,6 +52,10 @@ adapter 封裝，不得污染領域模型。
 - `src/scw/cli/` — 命令列入口（只解析參數、呼叫公開 API，不含數學演算法）。
 - `tests/{unit,property,integration,regression}/` — 單元、性質（Hypothesis）、整合、回歸測試。
 - `examples/` — 可執行範例（編號排序）；每個新功能至少補一個。
+- `notebooks/` — Jupyter 教學（`notebook` extra：`jupyterlab` + `ipykernel`）。
+  以 `uv run jupyter lab` 開啟。`notebooks/02_manifolds.ipynb` 是 0.6 的動手玩，
+  已內嵌輸出（含 3D 圖）可直接閱讀；改過請重跑 `uv run jupyter nbconvert
+  --to notebook --execute --inplace <nb>` 更新輸出。
 - `benchmarks/` — `timeit` 微基準，量測 SCW 相對 NumPy 的額外開銷。
 - `scripts/verify_phase1.sh` — 一鍵重跑 Phase 1 全部驗收（見 `docs/phase1-acceptance.md`）。
 - `docs/` — MkDocs Material 文件；`docs/spec/` 放規格正本。
