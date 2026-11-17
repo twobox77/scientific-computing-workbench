@@ -13,3 +13,9 @@ repos:
         language: system
         files: ^(README\.md|CHANGELOG\.md|docs/spec/.*\.md)$
         pass_filenames: false
+      - id: public-api
+        name: freeze public API surface
+        entry: python scripts/public_api.py
+        language: system
+        files: ^(src/scw/.*\.py|docs/api\.md)$
+        pass_filenames: false

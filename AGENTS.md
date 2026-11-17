@@ -82,10 +82,23 @@ adapter 封裝，不得污染領域模型。
 ```bash
 uv run ruff check .
 uv run python scripts/complexity_guard.py
+uv run python scripts/sync_progress.py --check
+uv run python scripts/public_api.py --check
 uv run ruff format --check .
 uv run mypy src/scw
 uv run pytest --cov=scw --cov-report=term-missing
 ```
+
+- **公開 API 凍結**（`scripts/public_api.py`，CI + pre-commit 已接）：公開面就是
+  每個公開命名空間（`scw`、`scw.config`、`scw.exceptions`、`scw.math_core`、
+  `scw.numerical`、`scw.manifold`、`scw.physics`、`scw.experiments`、
+  `scw.symbolic`、`scw.visualization`）`__all__` 裡的成員。快照寫在
+  `docs/public-api-frozen.json`，表格嵌在 `docs/api.md` 的
+  `<!-- public-api:start/end -->` 之間（**勿手改**）。改動 `__all__` 後跑
+  `uv run python scripts/public_api.py` 重生；`--check` 會在名稱增減/改名時擋下。
+  穩定性分級與棄用政策見 `docs/stability.md`（`math_core`/`numerical`/既有
+  exceptions = stable；manifold/physics/experiments/symbolic/visualization =
+  provisional，1.0 前可調）。`tests/unit/test_public_api.py` 也釘住這兩個產物。
 
 - **複雜度護欄**（`scripts/complexity_guard.py`，CI 已接）：核心模組不得出現
   **未標註理由的 `for`/`while` 迴圈**——逐元素迴圈是「把向量化運算改寫成 O(n) Python」
@@ -188,6 +201,22 @@ uv run pytest --cov=scw --cov-report=term-missing
   `Dataset`（可重現具名欄位 + `spec`，`split`/`fingerprint`/`from_spec`）。新例外
   `ExperimentError`（`ValueError`）。CLI 加 `scw experiments summary|list|show|best`。
   範例 `11_experiments.py`。
+- **0.9** API 穩定化：公開面凍結（`scripts/public_api.py` 掃 `__all__` → 快照
+  `docs/public-api-frozen.json` + `docs/api.md` 表格，CI/pre-commit `--check`）；
+  每個 `docs/api.md` 段落標穩定性分級（`math_core`/`numerical`/既有 exceptions =
+  stable；manifold/physics/experiments/symbolic/visualization = provisional）；
+  `docs/stability.md` 寫明公開/私有界線、棄用流程（announce → `DeprecationWarning`
+  → 等一個 major → 移除）與 SemVer 對應。`config`/`exceptions` 補 `__all__`。
+
+### API 穩定化慣例（0.9 起）
+
+- **公開面 = 公開命名空間的 `__all__`**；私有模組（`_backend`、`objects`、
+  子模組路徑）不承諾。改動 `__all__` 一律跑 `uv run python scripts/public_api.py`
+  重生快照與 `docs/api.md` 表格，並在 CHANGELOG 記一筆。
+- 破壞性變更走 `docs/stability.md` 的流程：先在 `[Unreleased]` 的
+  `### Deprecated` 宣告，執行時 `warnings.warn(..., DeprecationWarning,
+  stacklevel=2)`，名稱暫留 `__all__`，最早在下一個 major 才移除。**stable**
+  名稱只在大版本移除；patch 版不得動公開面。
 
 ### 實驗層慣例（0.8 起）
 

@@ -5,6 +5,7 @@
 
 - 想快速上手：看 [Quickstart](tutorials/quickstart.md)。
 - 想看支援的公開介面：看 [Public API](api.md)。
+- 想知道哪些介面凍結、如何棄用：看 [API stability](stability.md)。
 - 想看設計理由：看 [Architecture decisions](architecture/decisions.md)。
 - 想離線「欣賞與操作」：看 [離線使用](offline.md)。
 - 想看繪圖成果：看 [Gallery](gallery.md)。

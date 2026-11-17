@@ -47,6 +47,9 @@ Run all of these before pushing; CI runs the same set on Python 3.12 and 3.13:
 
 ```bash
 uv run ruff check .
+uv run python scripts/complexity_guard.py
+uv run python scripts/sync_progress.py --check
+uv run python scripts/public_api.py --check
 uv run ruff format --check .
 uv run mypy src/scw
 uv run pytest --cov=scw --cov-report=term-missing
@@ -56,6 +59,10 @@ uv run pytest --cov=scw --cov-report=term-missing
 - Float comparisons use a tolerance (`numpy.testing.assert_allclose`,
   `pytest.approx`); never exact equality on computed floats.
 - Public operations validate dimensions/shapes and fail explicitly.
+- The public API surface is **frozen**: adding or removing a name in a public
+  namespace's ``__all__`` requires regenerating `docs/public-api-frozen.json`
+  and the `docs/api.md` table with `uv run python scripts/public_api.py`, and
+  following the [stability policy](stability.md).
 
 ## Adding a feature
 

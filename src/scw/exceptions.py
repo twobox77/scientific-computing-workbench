@@ -39,3 +39,15 @@ class ConvergenceError(SCWError, RuntimeError):
 
 class ExperimentError(SCWError, ValueError):
     """An experiment configuration, run record or result store is invalid."""
+
+
+__all__ = [
+    "SCWError",
+    "ConvergenceError",
+    "DimensionError",
+    "ExperimentError",
+    "NonFiniteError",
+    "NumericalError",
+    "ShapeError",
+    "SymbolicError",
+]

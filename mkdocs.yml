@@ -4,6 +4,7 @@ theme:
 nav:
   - Home: index.md
   - Public API: api.md
+  - API stability: stability.md
   - Gallery: gallery.md
   - 離線使用: offline.md
   - Tutorials:

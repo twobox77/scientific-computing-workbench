@@ -4,6 +4,44 @@ SCW exposes a small, deliberately stable surface. Everything documented here is
 importable from the top-level ``scw`` package or from ``scw.math_core`` /
 ``scw.numerical``.
 
+## Stability
+
+Every public name carries a stability level, tagged on each section below:
+
+| Level | Meaning |
+| --- | --- |
+| **stable** | Frozen for 1.0. Breaking changes only in a major release. |
+| **provisional** | Shipped and usable, but may change in a `0.y` release (with a CHANGELOG note). |
+| **experimental** | May change in any release; use with care. |
+| **deprecated** | Scheduled for removal; still works, emits a `DeprecationWarning`. |
+
+The exact list of frozen names lives in
+[`docs/public-api-frozen.json`](public-api-frozen.json) and is checked by CI
+(`scripts/public_api.py --check`). Removing or renaming a **stable** name is a
+breaking change: it follows the [deprecation policy](stability.md) and is
+recorded in `CHANGELOG.md`. See [API stability and deprecation](stability.md)
+for the full policy.
+
+## Frozen public surface
+
+The block below is generated from each namespace's ``__all__``; do not edit it
+by hand — run `python scripts/public_api.py`.
+
+<!-- public-api:start -->
+| Namespace | Public names |
+| --- | --- |
+| `scw` | `Basis`, `Covector`, `LinearMap`, `Matrix`, `Tensor`, `Vector`, `VectorSpace`, `__version__`, `einsum` |
+| `scw.config` | `DEFAULT_ATOL`, `DEFAULT_DTYPE`, `DEFAULT_RTOL` |
+| `scw.exceptions` | `ConvergenceError`, `DimensionError`, `ExperimentError`, `NonFiniteError`, `NumericalError`, `SCWError`, `ShapeError`, `SymbolicError` |
+| `scw.math_core` | `Basis`, `Covector`, `LinearMap`, `Matrix`, `Tensor`, `Vector`, `VectorSpace`, `einsum` |
+| `scw.numerical` | `EighResult`, `LUResult`, `LeastSquaresResult`, `METHODS`, `ODESolution`, `QRResult`, `SVDResult`, `cholesky`, `det`, `eigh`, `inverse`, `lstsq`, `lu`, `qr`, `solve`, `solve_ivp`, `svd` |
+| `scw.manifold` | `CotangentSpace`, `EuclideanSpace`, `Manifold`, `Metric`, `Sphere`, `TangentSpace`, `point_coordinates` |
+| `scw.physics` | `CentralGravity`, `ConservativeForce`, `ConstantForce`, `Drag`, `Force`, `Particle`, `SpringForce`, `System`, `Trajectory`, `simulate` |
+| `scw.experiments` | `Artifact`, `Dataset`, `Experiment`, `GENERATORS`, `ResultStore`, `RunRecord`, `canonical_json`, `derive_seed`, `environment_fingerprint`, `jsonable` |
+| `scw.symbolic` | `SymbolicMatrix`, `SymbolicVector`, `to_symbolic` |
+| `scw.visualization` | `new_3d_figure`, `new_figure`, `plot_function`, `plot_matrix`, `plot_ode_solution`, `plot_surface`, `plot_vector`, `plot_vector_field`, `plot_vectors`, `plot_vectors_3d` |
+<!-- public-api:end -->
+
 ## Design rules
 
 - **Typed mathematical objects.** A `Vector` is not a raw array; a `Covector`
@@ -17,6 +55,8 @@ importable from the top-level ``scw`` package or from ``scw.math_core`` /
 - **One dtype policy.** Everything is `float64` (`scw.config.DEFAULT_DTYPE`).
 
 ## `scw.math_core`
+
+**Stability: stable.**
 
 ### `VectorSpace`
 
@@ -137,6 +177,8 @@ raise `DimensionError`.
 
 ## `scw.numerical`
 
+**Stability: stable.**
+
 SciPy-backed linear algebra and ODE integration on `Matrix` / `Vector` inputs.
 
 ### Linear systems
@@ -214,6 +256,8 @@ raises `ConvergenceError` unless `raise_on_failure=False`.
 
 ## Exceptions
 
+**Stability: stable** for the existing errors; a *new* error class may be added in a `0.y` release.
+
 ```python
 from scw.exceptions import (
     SCWError,
@@ -233,6 +277,8 @@ them too. `ConvergenceError` (a failed ODE integration or iterative method)
 also subclasses `RuntimeError`.
 
 ## `scw.visualization`
+
+**Stability: provisional.**
 
 Optional Matplotlib adapter, installed with the `visualization` extra. The core
 never imports Matplotlib; these helpers read domain objects and return the
@@ -274,6 +320,8 @@ Invalid input raises `TypeError` (non-`Vector`/`Matrix`, non-callable field),
 
 ## `scw.manifold`
 
+**Stability: provisional.**
+
 Curvature-aware geometry on top of the flat core (roadmap §11, 0.6).  A
 `TangentSpace` *is* a `VectorSpace`, so tangent vectors are ordinary `Vector`
 objects that additionally know their base point — operations reject mixing
@@ -304,6 +352,8 @@ A `Metric` validates its components (symmetric, positive definite) and raises
 See [Manifolds](mathematics/manifolds.md).
 
 ## `scw.physics`
+
+**Stability: provisional.**
 
 Newtonian mechanics on top of the core and numerical layers (roadmap §11, 0.7).
 A `Particle` is a point mass whose `position` and `velocity` are ordinary
@@ -383,6 +433,8 @@ integration raises `ConvergenceError`. See [Physics](mathematics/physics.md).
 
 ## `scw.symbolic`
 
+**Stability: provisional.**
+
 Optional adapter over SymPy, installed with the `symbolic` extra. `SymbolicMatrix`
 and `SymbolicVector` hold exact expressions and convert explicitly:
 
@@ -404,6 +456,8 @@ remains. Importing `scw.symbolic` without the extra raises an actionable
 [Symbolic algebra](mathematics/symbolic.md).
 
 ## `scw.experiments`
+
+**Stability: provisional.**
 
 Experiment tracking, run records, datasets and reproducibility (roadmap §11,
 0.8).  An `Experiment` bundles a configuration and a seed, runs a function and

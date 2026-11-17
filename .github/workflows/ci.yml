@@ -26,6 +26,8 @@ jobs:
         run: uv run python scripts/complexity_guard.py
       - name: Progress table up to date
         run: uv run python scripts/sync_progress.py --check
+      - name: Public API surface frozen
+        run: uv run python scripts/public_api.py --check
       - name: Format check
         run: uv run ruff format --check .
       - name: Type check

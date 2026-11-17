@@ -51,6 +51,7 @@ MILESTONES = {
     "0.6.0": "`scw.manifold`：切／餘切空間、metric、`flat` / `sharp`",
     "0.7.0": "`scw.physics`：質點、力模型、系統與牛頓模擬",
     "0.8.0": "`scw.experiments`：實驗追蹤、執行紀錄、可重現資料集與結果索引",
+    "0.9.0": "公開 API 凍結與穩定性分級；`docs/stability.md` 棄用政策",
 }
 
 

@@ -1,0 +1,109 @@
+{
+  "namespaces": {
+    "scw": [
+      "Basis",
+      "Covector",
+      "LinearMap",
+      "Matrix",
+      "Tensor",
+      "Vector",
+      "VectorSpace",
+      "__version__",
+      "einsum"
+    ],
+    "scw.config": [
+      "DEFAULT_ATOL",
+      "DEFAULT_DTYPE",
+      "DEFAULT_RTOL"
+    ],
+    "scw.exceptions": [
+      "ConvergenceError",
+      "DimensionError",
+      "ExperimentError",
+      "NonFiniteError",
+      "NumericalError",
+      "SCWError",
+      "ShapeError",
+      "SymbolicError"
+    ],
+    "scw.experiments": [
+      "Artifact",
+      "Dataset",
+      "Experiment",
+      "GENERATORS",
+      "ResultStore",
+      "RunRecord",
+      "canonical_json",
+      "derive_seed",
+      "environment_fingerprint",
+      "jsonable"
+    ],
+    "scw.manifold": [
+      "CotangentSpace",
+      "EuclideanSpace",
+      "Manifold",
+      "Metric",
+      "Sphere",
+      "TangentSpace",
+      "point_coordinates"
+    ],
+    "scw.math_core": [
+      "Basis",
+      "Covector",
+      "LinearMap",
+      "Matrix",
+      "Tensor",
+      "Vector",
+      "VectorSpace",
+      "einsum"
+    ],
+    "scw.numerical": [
+      "EighResult",
+      "LUResult",
+      "LeastSquaresResult",
+      "METHODS",
+      "ODESolution",
+      "QRResult",
+      "SVDResult",
+      "cholesky",
+      "det",
+      "eigh",
+      "inverse",
+      "lstsq",
+      "lu",
+      "qr",
+      "solve",
+      "solve_ivp",
+      "svd"
+    ],
+    "scw.physics": [
+      "CentralGravity",
+      "ConservativeForce",
+      "ConstantForce",
+      "Drag",
+      "Force",
+      "Particle",
+      "SpringForce",
+      "System",
+      "Trajectory",
+      "simulate"
+    ],
+    "scw.symbolic": [
+      "SymbolicMatrix",
+      "SymbolicVector",
+      "to_symbolic"
+    ],
+    "scw.visualization": [
+      "new_3d_figure",
+      "new_figure",
+      "plot_function",
+      "plot_matrix",
+      "plot_ode_solution",
+      "plot_surface",
+      "plot_vector",
+      "plot_vector_field",
+      "plot_vectors",
+      "plot_vectors_3d"
+    ]
+  }
+}

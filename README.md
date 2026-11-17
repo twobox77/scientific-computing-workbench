@@ -58,8 +58,8 @@ bash scripts/verify_phase1.sh
 | [0.5.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.5.0) | `scw.visualization`：Matplotlib adapter（2D/3D 繪圖） | ✅ 已發行 |
 | [0.6.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.6.0) | `scw.manifold`：切／餘切空間、metric、`flat` / `sharp` | ✅ 已發行 |
 | [0.7.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.7.0) | `scw.physics`：質點、力模型、系統與牛頓模擬 | ✅ 已發行 |
-| [0.8.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.8.0) | `scw.experiments`：實驗追蹤、執行紀錄、可重現資料集與結果索引 | ✅ 最新 |
-| 0.9 | API 穩定化、效能基準、文件補齊 | ⏳ 規劃中 |
+| [0.8.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.8.0) | `scw.experiments`：實驗追蹤、執行紀錄、可重現資料集與結果索引 | ✅ 已發行 |
+| [0.9.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.9.0) | 公開 API 凍結與穩定性分級；`docs/stability.md` 棄用政策 | ✅ 最新 |
 | 1.0 | 穩定公開 API、完整安裝與使用文件、CI 發佈流程 | ⏳ 規劃中 |
 <!-- progress:end -->
 
@@ -119,7 +119,8 @@ bash scripts/verify_phase1.sh
   [數值方法](docs/mathematics/numerical-methods.md)、[符號代數](docs/mathematics/symbolic.md)、
   [視覺化](docs/mathematics/visualization.md)、[流形](docs/mathematics/manifolds.md)、
   [物理模擬](docs/mathematics/physics.md)）、
-  [公開 API](docs/api.md)、[架構決策](docs/architecture/decisions.md)、
+  [公開 API](docs/api.md)、[API 穩定性與棄用政策](docs/stability.md)、
+  [架構決策](docs/architecture/decisions.md)、
   [開發指南](docs/development.md)。
 - **[離線欣賞與操作指南](docs/offline.md)**：無網路時如何安裝、欣賞、操作、解除安裝。
 - **微基準**（[`benchmarks/`](benchmarks/)）：量測 SCW 相對 NumPy 的額外開銷。

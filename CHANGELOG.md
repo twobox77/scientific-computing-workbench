@@ -6,6 +6,31 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-17
+
+### Added
+
+- **Frozen public API surface.** `scripts/public_api.py` discovers every
+  public namespace's ``__all__`` and writes the contract to
+  `docs/public-api-frozen.json` and the generated table in `docs/api.md`;
+  `--check` fails CI when a name is added, removed or renamed without updating
+  the snapshot.  CI and a `public-api` pre-commit hook run the check, and
+  `tests/unit/test_api_freeze.py` guards both artifacts.
+- **Stability levels** tagged on every section of `docs/api.md` (`stable`,
+  `provisional`, `experimental`, `deprecated`): `scw.math_core`,
+  `scw.numerical` and the existing `scw.exceptions` errors are **stable**;
+  `scw.manifold`, `scw.physics`, `scw.experiments`, `scw.symbolic` and
+  `scw.visualization` are **provisional** until 1.0.
+- **`docs/stability.md`**: the public/private boundary, the stability levels,
+  the deprecation policy (announce → `DeprecationWarning` → wait a major →
+  remove), the signature-change rules and the Semantic Versioning mapping.
+- `__all__` on `scw.config` and `scw.exceptions`, so every public namespace
+  declares its surface explicitly.
+
+### Changed
+
+- Version bumped to 0.9.0 (roadmap §11: API stabilization).
+
 ## [0.8.0] - 2026-11-17
 
 ### Added
@@ -232,7 +257,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.5.0...v0.6.0
