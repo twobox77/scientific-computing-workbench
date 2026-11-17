@@ -59,8 +59,8 @@ bash scripts/verify_phase1.sh
 | [0.6.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.6.0) | `scw.manifold`：切／餘切空間、metric、`flat` / `sharp` | ✅ 已發行 |
 | [0.7.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.7.0) | `scw.physics`：質點、力模型、系統與牛頓模擬 | ✅ 已發行 |
 | [0.8.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.8.0) | `scw.experiments`：實驗追蹤、執行紀錄、可重現資料集與結果索引 | ✅ 已發行 |
-| [0.9.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.9.0) | 公開 API 凍結與穩定性分級；`docs/stability.md` 棄用政策 | ✅ 最新 |
-| 1.0 | 穩定公開 API、完整安裝與使用文件、CI 發佈流程 | ⏳ 規劃中 |
+| [0.9.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.9.0) | 公開 API 凍結與穩定性分級；`docs/stability.md` 棄用政策 | ✅ 已發行 |
+| [1.0.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v1.0.0) | 穩定公開 API；安裝／使用文件、wheel 安裝驗證與 CI 發佈管線 | ✅ 最新 |
 <!-- progress:end -->
 
 目前已支援（摘要）：
@@ -154,10 +154,13 @@ uv sync --all-extras
 
 只裝核心（不裝繪圖／notebook／互動）用 `uv sync`；只要特定功能用
 `uv sync --extra symbolic`、`--extra visualization`、`--extra notebook` 或
-`--extra interactive`。完全離線的安裝方式見
+`--extra interactive`。完整安裝說明（uv / pip / 原始碼、`all` extra、驗證與
+解除安裝）見 **[安裝文件](docs/installation.md)**；完全離線的安裝方式見
 [離線指南 §0.5](docs/offline.md#05-安裝依賴一次性)。
 
 ## 使用
+
+各層公開 API 的導覽與可執行片段見 **[使用文件](docs/usage.md)**。快速示例：
 
 ```python
 from scw.math_core import Basis, Covector, LinearMap, Matrix, Tensor, Vector
@@ -176,7 +179,7 @@ t.apply(Vector([1.0, 1.0]))
 a = Tensor([[1.0, 2.0], [3.0, 4.0]])
 a.outer(a)        # 張量積
 a.contract(a)     # 縮併（此處為矩陣乘積）
-float(a.trace())  # 跡
+a.trace().data  # 跡
 
 basis = Basis([Vector([1.0, 0.0]), Vector([1.0, 1.0])])
 basis.to_coordinates(Vector([3.0, 2.0]))   # 在該基底下的座標

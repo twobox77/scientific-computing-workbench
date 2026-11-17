@@ -63,22 +63,30 @@ def test_public_namespaces_all_define_all() -> None:
 
 
 def test_render_snapshot_round_trips() -> None:
-    surface = {"scw": ["Vector", "Matrix"]}
+    surface = {"scw": {"stability": "stable", "names": ["Matrix", "Vector"]}}
     text = pa.render_snapshot(surface)
     assert json.loads(text) == {"namespaces": surface}
     assert text.endswith("\n")
 
 
+def test_surface_attaches_a_stability_level_to_every_namespace() -> None:
+    contract = pa.surface()
+    assert set(contract) == set(pa.NAMESPACES)
+    for entry in contract.values():
+        assert entry["stability"] in pa.VALID_LEVELS
+        assert entry["names"] == sorted(entry["names"])
+
+
 def test_render_table_is_fenced_by_markers() -> None:
-    table = pa.render_table({"scw": ["Vector"]})
+    table = pa.render_table({"scw": {"stability": "stable", "names": ["Vector"]}})
     lines = table.splitlines()
     assert lines[0] == pa.START
     assert lines[-1] == pa.END
-    assert "| `scw` | `Vector` |" in table
+    assert "| `scw` | stable | `Vector` |" in table
 
 
 def test_render_table_lists_names_in_order() -> None:
-    table = pa.render_table({"scw": ["A", "B", "C"]})
+    table = pa.render_table({"scw": {"stability": "stable", "names": ["A", "B", "C"]}})
     assert "`A`, `B`, `C`" in table
 
 
@@ -86,21 +94,35 @@ def test_render_table_lists_names_in_order() -> None:
 
 
 def test_diff_reports_added_and_removed() -> None:
-    committed = {"scw": ["A", "B"]}
-    discovered = {"scw": ["A", "C"]}
+    committed = {"scw": {"stability": "stable", "names": ["A", "B"]}}
+    discovered = {"scw": {"stability": "stable", "names": ["A", "C"]}}
     diff = pa._diff(committed, discovered)
     assert "+ scw.C" in diff
     assert "- scw.B" in diff
 
 
 def test_diff_reports_new_and_gone_namespaces() -> None:
-    diff = pa._diff({"scw.a": ["X"]}, {"scw.b": ["Y"]})
+    diff = pa._diff(
+        {"scw.a": {"stability": "stable", "names": ["X"]}},
+        {"scw.b": {"stability": "stable", "names": ["Y"]}},
+    )
     assert "+ scw.b.Y" in diff
     assert "- scw.a.X" in diff
 
 
+def test_diff_reports_a_stability_change() -> None:
+    diff = pa._diff(
+        {"scw": {"stability": "provisional", "names": ["A"]}},
+        {"scw": {"stability": "stable", "names": ["A"]}},
+    )
+    assert "~ scw stability: provisional -> stable" in diff
+
+
 def test_diff_is_empty_when_identical() -> None:
-    surface = {"scw": ["A"], "scw.b": ["B"]}
+    surface = {
+        "scw": {"stability": "stable", "names": ["A"]},
+        "scw.b": {"stability": "stable", "names": ["B"]},
+    }
     assert pa._diff(surface, dict(surface)) == []
 
 
@@ -111,7 +133,12 @@ def test_check_detects_drift_against_a_temp_snapshot(
     api_md = tmp_path / "api.md"
     api_md.write_text(f"# api\n\n{pa.START}\n{pa.END}\n", encoding="utf-8")
     stale = tmp_path / "frozen.json"
-    stale.write_text(json.dumps({"namespaces": {"scw": ["Vector"]}}), encoding="utf-8")
+    stale.write_text(
+        json.dumps(
+            {"namespaces": {"scw": {"stability": "stable", "names": ["Vector"]}}}
+        ),
+        encoding="utf-8",
+    )
     monkeypatch.setattr(pa, "API_MD", api_md)
     monkeypatch.setattr(pa, "SNAPSHOT", stale)
     assert pa.sync(check=True) == 1
@@ -129,7 +156,7 @@ def test_sync_rewrites_snapshot_and_table(
     monkeypatch.setattr(pa, "SNAPSHOT", snapshot)
     assert pa.sync(check=False) == 0
     assert "STALE_PLACEHOLDER" not in api_md.read_text(encoding="utf-8")
-    assert pa.load_snapshot(snapshot) == pa.discover()
+    assert pa.load_snapshot(snapshot) == pa.surface()
     # and the freshly written state now passes the check
     assert pa.sync(check=True) == 0
 
@@ -162,9 +189,20 @@ def test_discover_rejects_a_namespace_without_all(
 
 def test_committed_snapshot_matches_discovery() -> None:
     """Guard: the committed snapshot must equal the live surface."""
-    assert pa.load_snapshot() == pa.discover()
+    assert pa.load_snapshot() == pa.surface()
 
 
 def test_real_public_api_is_frozen() -> None:
     """Guard: the committed snapshot and api.md table must both be current."""
     assert pa.sync(check=True) == 0
+
+
+def test_every_public_namespace_is_stable_at_1_0() -> None:
+    """At 1.0 the whole public surface is frozen: no provisional names remain."""
+    assert set(pa.STABILITY.values()) == {"stable"}
+    assert set(pa.load_snapshot()) == set(pa.NAMESPACES)
+
+
+def test_stability_levels_are_a_known_vocabulary() -> None:
+    for level in pa.STABILITY.values():
+        assert level in pa.VALID_LEVELS

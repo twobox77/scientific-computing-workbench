@@ -34,3 +34,12 @@ jobs:
         run: uv run mypy src/scw
       - name: Test
         run: uv run pytest --cov=scw --cov-report=term-missing
+
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Build and install the wheel in a fresh environment
+        run: bash scripts/verify_install.sh symbolic visualization

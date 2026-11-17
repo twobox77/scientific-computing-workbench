@@ -75,6 +75,9 @@ adapter 封裝，不得污染領域模型。
   移除未用 import、不寫分號、函式/陳述式間留空行。
 - `benchmarks/` — `timeit` 微基準，量測 SCW 相對 NumPy 的額外開銷。
 - `scripts/verify_phase1.sh` — 一鍵重跑 Phase 1 全部驗收（見 `docs/phase1-acceptance.md`）。
+- `scripts/verify_install.sh` — 建 wheel、裝進乾淨 venv、匯入所有公開命名空間
+  （CI `install` job 跑 `bash scripts/verify_install.sh symbolic visualization`）。
+- `scripts/public_api.py` — 公開面凍結／`--check`（見品質閘門）。
 - `docs/` — MkDocs Material 文件；`docs/spec/` 放規格正本。
 
 ## 品質閘門（每個 PR 必過）
@@ -96,9 +99,8 @@ uv run pytest --cov=scw --cov-report=term-missing
   `docs/public-api-frozen.json`，表格嵌在 `docs/api.md` 的
   `<!-- public-api:start/end -->` 之間（**勿手改**）。改動 `__all__` 後跑
   `uv run python scripts/public_api.py` 重生；`--check` 會在名稱增減/改名時擋下。
-  穩定性分級與棄用政策見 `docs/stability.md`（`math_core`/`numerical`/既有
-  exceptions = stable；manifold/physics/experiments/symbolic/visualization =
-  provisional，1.0 前可調）。`tests/unit/test_public_api.py` 也釘住這兩個產物。
+  穩定性分級與棄用政策見 `docs/stability.md`（**1.0 起所有公開命名空間皆 stable**，
+  層級由 `scripts/public_api.py` 的 `STABILITY` 單一來源管理並寫進快照）。
 
 - **複雜度護欄**（`scripts/complexity_guard.py`，CI 已接）：核心模組不得出現
   **未標註理由的 `for`/`while` 迴圈**——逐元素迴圈是「把向量化運算改寫成 O(n) Python」
@@ -138,17 +140,21 @@ uv run pytest --cov=scw --cov-report=term-missing
 - **`uv sync --extra <x>` 會移除其他 extra 與 dev 依賴**（2026-11-16 踩到：跑完
   `uv sync --extra interactive` 後 `ruff` 不見了）。要保留全套請用
   `uv sync --all-extras`。CI 用 `--all-extras --frozen`。
-- Extras：`symbolic`、`visualization`、`notebook`、`interactive`（後者 =
-  matplotlib + jupyterlab + ipykernel + ipympl，供可拖曳 3D）、`dev`。
-- 版本：Semantic Versioning；1.0 前用 `0.y.z`，破壞性變更記錄於 `CHANGELOG.md`。
+- Extras：`symbolic`、`visualization`、`notebook`、`interactive`（= 
+  matplotlib + jupyterlab + ipykernel + ipympl，供可拖曳 3D）、`all`（一次裝齊
+  所有 optional）、`dev`。
+- 版本：Semantic Versioning；1.0 起用 `1.y.z`，破壞性變更（僅限 major）走
+  `docs/stability.md` 的棄用流程並記錄於 `CHANGELOG.md`。
 - 直接 commit 進 `main`（不開 PR），除非另有指示。
-- 公開 API 集中由 `__init__.py` 匯出；內部模組路徑在 1.0 前可調整。
+- 公開 API 集中由 `__init__.py` 匯出；1.0 起公開面凍結（見下方「公開 API 凍結」），
+  內部模組路徑（`scw.math_core.vector` 等）仍非承諾介面。
 
 ## 路線圖（規格 §11）
 
 0.2 Tensor → 0.3 Symbolic → 0.4 Numerical/ODE → 0.5 Visualization →
-0.6 Manifold → 0.7 Physics → 0.8 Experiments → 0.9 API 穩定化 → 1.0 穩定。
-版本以驗收條件與模組成熟度決定，不按日曆。
+0.6 Manifold → 0.7 Physics → 0.8 Experiments → 0.9 API 穩定化 → **1.0 穩定
+（已發行）**。1.0 後走 SemVer：新功能可先以 provisional 進 minor，之後再升 stable；
+移除先棄用、最快下一個 major 才落地。
 
 ## 設計備忘
 
@@ -207,8 +213,13 @@ uv run pytest --cov=scw --cov-report=term-missing
   stable；manifold/physics/experiments/symbolic/visualization = provisional）；
   `docs/stability.md` 寫明公開/私有界線、棄用流程（announce → `DeprecationWarning`
   → 等一個 major → 移除）與 SemVer 對應。`config`/`exceptions` 補 `__all__`。
+- **1.0** 穩定公開 API：所有公開命名空間升為 **stable**（層級改由
+  `scripts/public_api.py` 的 `STABILITY` 單一來源管理，寫進快照並受 `--check`
+  保護）；新增 `docs/installation.md`、`docs/usage.md`（安裝／使用總覽，含 `all`
+  extra）；`scripts/verify_install.sh`（建 wheel → 乾淨 venv → 匯入所有公開命名空間）
+  接上 CI `install` job；`release.yml` 加「tag 與 `pyproject`/`__version__` 一致」檢查。
 
-### API 穩定化慣例（0.9 起）
+### API 穩定化慣例（0.9／1.0 起）
 
 - **公開面 = 公開命名空間的 `__all__`**；私有模組（`_backend`、`objects`、
   子模組路徑）不承諾。改動 `__all__` 一律跑 `uv run python scripts/public_api.py`

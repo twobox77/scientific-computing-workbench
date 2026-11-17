@@ -16,6 +16,16 @@ jobs:
           fetch-depth: 0
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+      - name: Check the tag matches the package version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          project="$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")"
+          module="$(python3 -c "import re; print(re.search(r'__version__ = \"([^\"]+)\"', open('src/scw/__init__.py').read()).group(1))")"
+          echo "tag=$tag pyproject=$project module=$module"
+          if [ "$tag" != "$project" ] || [ "$tag" != "$module" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match pyproject ($project) / __version__ ($module)"
+            exit 1
+          fi
       - name: Build wheel and sdist
         run: uv build
       - name: Show artifacts

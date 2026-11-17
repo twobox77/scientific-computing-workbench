@@ -37,32 +37,38 @@ section that documents it in [Public API](api.md)):
 
 | Level | Promise |
 | --- | --- |
-| **stable** | Frozen for 1.0. A breaking change happens only in a major release, after the deprecation process below. |
+| **stable** | Frozen since 1.0. A breaking change happens only in a major release, after the deprecation process below. |
 | **provisional** | Shipped and usable, but may change in a `0.y` release. A breaking change is still announced in `CHANGELOG.md` and, where practical, goes through the deprecation process. |
 | **experimental** | May change or be removed in any release, with no deprecation period. |
 | **deprecated** | Still works, but scheduled for removal; using it emits a `DeprecationWarning`. |
 
-Current levels:
+Current levels — at 1.0 every public namespace is **stable**:
 
 | Namespace | Level |
 | --- | --- |
 | `scw.math_core` | stable |
 | `scw.numerical` | stable |
-| `scw.exceptions` | stable (existing errors) |
-| `scw.manifold` | provisional |
-| `scw.physics` | provisional |
-| `scw.experiments` | provisional |
-| `scw.symbolic` | provisional |
-| `scw.visualization` | provisional |
+| `scw.exceptions` | stable |
+| `scw.manifold` | stable |
+| `scw.physics` | stable |
+| `scw.experiments` | stable |
+| `scw.symbolic` | stable |
+| `scw.visualization` | stable |
 
-### Why the core is stable and the newer layers are not
+The level of every namespace is recorded in
+[`docs/public-api-frozen.json`](public-api-frozen.json) and checked by
+`scripts/public_api.py --check`, so promoting or demoting a namespace is a
+reviewable change to a single source (`STABILITY` in that script).
+
+### How the levels were decided
 
 The mathematical core (`scw.math_core`, `scw.numerical`) has been in use since
-0.1 and its semantics are settled, so it is frozen. The layers added later
-(manifold, physics, experiments, and the optional symbolic/visualization
-adapters) are *provisional*: their shape is right, but a `0.y` release may still
-refine a signature or a return type. They become **stable** at 1.0 unless a
-release note says otherwise.
+0.1 and its semantics are settled. The layers added later (manifold, physics,
+experiments, and the optional symbolic/visualization adapters) were
+*provisional* during 0.x while their signatures settled; at **1.0** their
+public surface has been reviewed and frozen, so all of them are now **stable**.
+The vocabulary above is kept because a future major cycle may introduce a
+genuinely new, provisional layer.
 
 ## Deprecation policy
 
@@ -104,23 +110,27 @@ breaking change and follows the deprecation policy.
 
 SCW follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
-- **Major** (`1.0.0`): may break stable names, after the deprecation process.
-- **Minor** (`0.y.0`): adds features; may change *provisional* names, with a
-  CHANGELOG note. Does not break *stable* names.
-- **Patch** (`0.y.z`): bug fixes only; no public-surface change.
+- **Major** (`1.0.0`, `2.0.0`, ...): may break stable names, after the
+  deprecation process.
+- **Minor** (`1.y.0`): adds features; does not break *stable* names.
+- **Patch** (`1.y.z`): bug fixes only; no public-surface change.
 
-Before 1.0 the minor number plays the role of "major" for the still-moving
-layers, which is exactly why they are marked *provisional* rather than
-*stable*.
+During 0.x the minor number played the role of "major" for the still-moving
+layers; that is why they were marked *provisional* rather than *stable* until
+1.0.
 
 ## The road to 1.0
 
-1. **0.9 (this milestone)** — freeze the public surface, tag every section with
-   a stability level, wire the enforcement into CI, and publish this policy.
-2. **1.0** — promote the provisional layers to *stable* once their signatures
-   have settled, complete the install/usage documentation, and turn on the CI
-   release pipeline. From then on, breaking a *stable* name requires a major
-   release and the deprecation process above.
+1. **0.9** — froze the public surface, tagged every section with a stability
+   level, wired the enforcement into CI, and published this policy.
+2. **1.0 (this release)** — promoted every layer to *stable* once the public
+   signatures had been reviewed, completed the install/usage documentation,
+   and turned on the CI release pipeline. From now on, breaking a *stable* name
+   requires a major release and the deprecation process above.
+
+Beyond 1.0 the same policy governs: a new feature may ship as *provisional* in
+a minor release and be promoted to *stable* later; a removal starts with a
+deprecation and lands no earlier than the next major release.
 
 ## Checking the surface yourself
 

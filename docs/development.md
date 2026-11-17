@@ -74,5 +74,22 @@ uv run pytest --cov=scw --cov-report=term-missing
 
 ## Versioning
 
-Semantic Versioning. Before 1.0 the minor number (`0.y.0`) marks
-backwards-incompatible changes; they are recorded in `CHANGELOG.md`.
+Semantic Versioning. From 1.0 the major number marks backwards-incompatible
+changes; a breaking change to a stable name goes through the
+[stability and deprecation policy](stability.md) and is recorded in
+`CHANGELOG.md`. The public surface is frozen in
+`docs/public-api-frozen.json`; regenerate it with
+`uv run python scripts/public_api.py` whenever a namespace's `__all__` changes.
+
+## Release checklist
+
+1. Move the `[Unreleased]` notes into a dated `## [x.y.z] - YYYY-MM-DD`
+   section in `CHANGELOG.md` and update the compare links.
+2. Bump the version in `pyproject.toml` and `src/scw/__init__.py` (they must
+   match the tag; the release workflow checks this).
+3. `uv run python scripts/sync_progress.py` to refresh the README table.
+4. Run the quality gates above and `bash scripts/verify_install.sh symbolic visualization`.
+5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The release
+   workflow builds the wheel/sdist, generates the notes with
+   `scripts/make_release_notes.py`, creates the GitHub release and uploads the
+   artifacts.

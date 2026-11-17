@@ -3,6 +3,8 @@ theme:
   name: material
 nav:
   - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
   - Public API: api.md
   - API stability: stability.md
   - Gallery: gallery.md

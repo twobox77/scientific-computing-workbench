@@ -9,8 +9,13 @@ The public surface is exactly what each public namespace re-exports in its
   ``docs/public-api-frozen.json`` (the committed contract) and to the
   generated block inside ``docs/api.md``;
 * **check** — compare the discovered surface against the committed JSON and
-  fail (non-zero) if a name was added or removed, so an accidental public
-  change cannot slip in unnoticed.
+  fail (non-zero) if a name or a stability level changed, so an accidental
+  public change cannot slip in unnoticed.
+
+The per-namespace stability level is editorial and lives in ``STABILITY``
+below (the single source of truth), the same way ``sync_progress.MILESTONES``
+holds the curated release blurbs.  It is written into the snapshot too, so the
+level is machine-checked rather than only prose.
 
 Usage::
 
@@ -24,6 +29,7 @@ import argparse
 import importlib
 import json
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 API_MD = ROOT / "docs" / "api.md"
@@ -47,6 +53,13 @@ NAMESPACES = [
     "scw.visualization",
 ]
 
+#: Stability level per public namespace (see ``docs/stability.md``).  At 1.0
+#: every public namespace is ``stable``; the vocabulary (``provisional``,
+#: ``experimental``, ``deprecated``) stays available for future evolution.
+STABILITY = {namespace: "stable" for namespace in NAMESPACES}
+
+VALID_LEVELS = ("stable", "provisional", "experimental", "deprecated")
+
 
 def discover() -> dict[str, list[str]]:
     """Import every public namespace and read the names it re-exports."""
@@ -69,36 +82,58 @@ def discover() -> dict[str, list[str]]:
     return surface
 
 
-def load_snapshot(path: Path = SNAPSHOT) -> dict[str, list[str]]:
-    return json.loads(path.read_text(encoding="utf-8"))["namespaces"]
+def surface() -> dict[str, dict[str, Any]]:
+    """The full contract: each namespace's stability level and names."""
+    names = discover()
+    return {
+        namespace: {"stability": STABILITY[namespace], "names": names[namespace]}
+        for namespace in NAMESPACES
+    }
+
+
+def load_snapshot(path: Path = SNAPSHOT) -> dict[str, dict[str, Any]]:
+    data: dict[str, dict[str, Any]] = json.loads(path.read_text(encoding="utf-8"))[
+        "namespaces"
+    ]
+    return data
 
 
 def _diff(
-    committed: dict[str, list[str]], discovered: dict[str, list[str]]
+    committed: dict[str, dict[str, Any]],
+    discovered: dict[str, dict[str, Any]],
 ) -> list[str]:
     """Human-readable differences between the snapshot and reality."""
     lines: list[str] = []
     for namespace in sorted(set(committed) | set(discovered)):
-        old = set(committed.get(namespace, []))
-        new = set(discovered.get(namespace, []))
-        if old == new:
-            continue
-        for name in sorted(new - old):
+        old = committed.get(namespace, {})
+        new = discovered.get(namespace, {})
+        old_names = set(old.get("names", []))
+        new_names = set(new.get("names", []))
+        for name in sorted(new_names - old_names):
             lines.append(f"+ {namespace}.{name}")
-        for name in sorted(old - new):
+        for name in sorted(old_names - new_names):
             lines.append(f"- {namespace}.{name}")
+        if old.get("stability") != new.get("stability") and old and new:
+            lines.append(
+                f"~ {namespace} stability: "
+                f"{old.get('stability')} -> {new.get('stability')}"
+            )
     return lines
 
 
-def render_snapshot(surface: dict[str, list[str]]) -> str:
+def render_snapshot(surface: dict[str, dict[str, Any]]) -> str:
     return json.dumps({"namespaces": surface}, indent=2, sort_keys=True) + "\n"
 
 
-def render_table(surface: dict[str, list[str]]) -> str:
-    lines = [START, "| Namespace | Public names |", "| --- | --- |"]
-    for namespace, names in surface.items():
-        rendered = ", ".join(f"`{name}`" for name in names)
-        lines.append(f"| `{namespace}` | {rendered} |")
+def render_table(surface: dict[str, dict[str, Any]]) -> str:
+    lines = [
+        START,
+        "| Namespace | Stability | Public names |",
+        "| --- | --- | --- |",
+    ]
+    for namespace, entry in surface.items():
+        names = ", ".join(f"`{name}`" for name in entry["names"])
+        lines.append(f"| `{namespace}` | {entry['stability']} | {names} |")
     lines.append(END)
     return "\n".join(lines)
 
@@ -109,7 +144,10 @@ def _current_block(text: str) -> str:
 
 def sync(check: bool) -> int:
     """Rewrite (or, with ``check``, verify) the snapshot and the api.md block."""
-    discovered = discover()
+    for namespace, level in STABILITY.items():
+        if level not in VALID_LEVELS:
+            raise SystemExit(f"{namespace}: unknown stability level {level!r}")
+    discovered = surface()
 
     if check:
         committed = load_snapshot()
@@ -138,7 +176,7 @@ def sync(check: bool) -> int:
     updated = text[: text.index(START)] + table + text[text.index(END) + len(END) :]
     if updated != text:
         API_MD.write_text(updated, encoding="utf-8")
-    total = sum(len(names) for names in discovered.values())
+    total = sum(len(entry["names"]) for entry in discovered.values())
     print(f"public API surface: {total} names across {len(discovered)} namespaces.")
     return 0
 

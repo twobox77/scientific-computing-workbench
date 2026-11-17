@@ -6,6 +6,32 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-17
+
+The first stable release.  The public API is frozen and every public namespace
+is **stable**; from here on, breaking a stable name requires a major release
+and the deprecation process in `docs/stability.md`.
+
+### Added
+
+- **Install and usage documentation**: `docs/installation.md` (uv / pip / from
+  source, the `all` extra, verification and uninstall) and `docs/usage.md`, a
+  task-oriented tour of every public layer with runnable snippets.
+- **`scripts/verify_install.sh`**: builds the wheel, installs it into a fresh
+  virtual environment and imports every public namespace.  Wired into CI as a
+  dedicated `install` job, so packaging mistakes fail the build.
+- **Release guard**: `.github/workflows/release.yml` now fails when the pushed
+  tag does not match the `pyproject.toml` and `__version__` versions.
+- An `all` extra that pulls in every optional dependency at once.
+
+### Changed
+
+- **Promoted every public namespace to `stable`.**  The `manifold`, `physics`,
+  `experiments`, `symbolic` and `visualization` layers are no longer
+  *provisional*; the per-namespace level is now recorded in
+  `docs/public-api-frozen.json` and checked by `scripts/public_api.py --check`.
+- Version bumped to 1.0.0.
+
 ## [0.9.0] - 2026-11-17
 
 ### Added
@@ -257,7 +283,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.6.0...v0.7.0

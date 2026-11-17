@@ -3,7 +3,7 @@
 以 Python 撰寫的科學計算工作台：在 NumPy 與 SciPy 之上自行定義數學型別，
 並以可重現、可測試的工程方式打包。
 
-- 想快速上手：看 [Quickstart](tutorials/quickstart.md)。
+- 想快速上手：看 [Installation](installation.md) 與 [Usage](usage.md)。
 - 想看支援的公開介面：看 [Public API](api.md)。
 - 想知道哪些介面凍結、如何棄用：看 [API stability](stability.md)。
 - 想看設計理由：看 [Architecture decisions](architecture/decisions.md)。

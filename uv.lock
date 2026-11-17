@@ -3005,7 +3005,7 @@ wheels = [
 
 [[package]]
 name = "scw"
-version = "0.9.0"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "numpy" },
@@ -3014,6 +3014,13 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+all = [
+    { name = "ipykernel" },
+    { name = "ipympl" },
+    { name = "jupyterlab" },
+    { name = "matplotlib" },
+    { name = "sympy" },
+]
 dev = [
     { name = "hypothesis" },
     { name = "mkdocs-material" },
@@ -3043,11 +3050,15 @@ visualization = [
 [package.metadata]
 requires-dist = [
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.100" },
+    { name = "ipykernel", marker = "extra == 'all'", specifier = ">=6.29" },
     { name = "ipykernel", marker = "extra == 'interactive'", specifier = ">=6.29" },
     { name = "ipykernel", marker = "extra == 'notebook'", specifier = ">=6.29" },
+    { name = "ipympl", marker = "extra == 'all'", specifier = ">=0.9" },
     { name = "ipympl", marker = "extra == 'interactive'", specifier = ">=0.9" },
+    { name = "jupyterlab", marker = "extra == 'all'", specifier = ">=4.2" },
     { name = "jupyterlab", marker = "extra == 'interactive'", specifier = ">=4.2" },
     { name = "jupyterlab", marker = "extra == 'notebook'", specifier = ">=4.2" },
+    { name = "matplotlib", marker = "extra == 'all'", specifier = ">=3.9" },
     { name = "matplotlib", marker = "extra == 'interactive'", specifier = ">=3.9" },
     { name = "matplotlib", marker = "extra == 'visualization'", specifier = ">=3.9" },
     { name = "mkdocs-material", marker = "extra == 'dev'", specifier = ">=9.5" },
@@ -3058,10 +3069,11 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6" },
     { name = "scipy", specifier = ">=1.13" },
+    { name = "sympy", marker = "extra == 'all'", specifier = ">=1.13" },
     { name = "sympy", marker = "extra == 'symbolic'", specifier = ">=1.13" },
     { name = "typer", specifier = ">=0.12" },
 ]
-provides-extras = ["symbolic", "visualization", "notebook", "interactive", "dev"]
+provides-extras = ["symbolic", "visualization", "notebook", "interactive", "all", "dev"]
 
 [[package]]
 name = "send2trash"
