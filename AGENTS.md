@@ -19,7 +19,8 @@
 1. 確認工作區是本 repo；若尚未 clone：
    `git clone https://$GITHUB_PERSONAL_ACCESS_TOKEN@github.com/twobox77/scientific-computing-workbench.git .`
 2. `git pull` 確保最新；remote 帶 token 並用 `GIT_TERMINAL_PROMPT=0` 執行 git 指令。
-3. 讀取本檔與 `README.md`、`docs/`、規格文件，遵守其中規範。
+3. 讀取本檔與 `README.md`、`docs/`、規格文件，遵守其中規範；
+   接手／交接請先讀 `docs/handover.md`（現況、發佈 SOP、環境限制、待辦）。
 4. 回報「已接上 repo + 已讀規則」再開始任務。
 
 ## 依賴方向（硬規則）
@@ -78,7 +79,8 @@ adapter 封裝，不得污染領域模型。
 - `scripts/verify_install.sh` — 建 wheel、裝進乾淨 venv、匯入所有公開命名空間
   （CI `install` job 跑 `bash scripts/verify_install.sh symbolic visualization`）。
 - `scripts/public_api.py` — 公開面凍結／`--check`（見品質閘門）。
-- `docs/` — MkDocs Material 文件；`docs/spec/` 放規格正本。
+- `docs/` — MkDocs Material 文件；`docs/spec/` 放規格正本；`docs/handover.md`
+  是交接文件（現況、發佈 SOP、環境限制、待辦）。
 
 ## 品質閘門（每個 PR 必過）
 

@@ -19,6 +19,7 @@
 [實驗追蹤](mathematics/experiments.md)。
 
 貢獻者請讀 [Development](development.md)；Phase 1 的正式結案紀錄在
-[Phase 1 acceptance report](phase1-acceptance.md)。專案的計畫、進度與成果總覽，
-以及安裝／使用／解除安裝的完整說明，見倉庫根目錄的
+[Phase 1 acceptance report](phase1-acceptance.md)。**接手的維護者請先讀
+[交接文件（Handover）](handover.md)**，內含目前狀態、發佈 SOP 與環境限制。
+專案的計畫、進度與成果總覽，以及安裝／使用／解除安裝的完整說明，見倉庫根目錄的
 [`README.md`](https://github.com/twobox77/scientific-computing-workbench#readme)。

@@ -24,6 +24,7 @@ nav:
   - Architecture:
       - Decisions: architecture/decisions.md
   - Development: development.md
+  - Handover: handover.md
   - Phase 1 acceptance: phase1-acceptance.md
   - Specification: spec/SCW_1.0_Technical_Specification_and_Phase1_Plan.md
 markdown_extensions:

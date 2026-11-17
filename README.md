@@ -235,7 +235,9 @@ bash scripts/verify_phase1.sh                # 重跑 Phase 1 全部驗收
 ```
 
 慣例與品質閘門見 [`CONTRIBUTING.md`](CONTRIBUTING.md)；架構與數學筆記見
-[`docs/`](docs/)；給 AI agent 的倉庫知識見 [`AGENTS.md`](AGENTS.md)。
+[`docs/`](docs/)；給 AI agent 的倉庫知識見 [`AGENTS.md`](AGENTS.md)；
+**接手的維護者請先讀 [`docs/handover.md`](docs/handover.md)**（現況、發佈 SOP、
+環境限制與待辦）。
 
 ## 授權
 

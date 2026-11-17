@@ -8,6 +8,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **Handover document**: `docs/handover.md` records the current state, the
+  release SOP, the sandbox credential limits and the suggested next steps for
+  whoever picks the project up next.
 - **Documentation site on GitHub Pages**: the MkDocs site is now published to
   <https://twobox77.github.io/scientific-computing-workbench/> by the `Docs`
   workflow (`.github/workflows/docs.yml`), which builds with `--strict` on
