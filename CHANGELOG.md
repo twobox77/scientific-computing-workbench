@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Documentation site on GitHub Pages**: the MkDocs site is now published to
+  <https://twobox77.github.io/scientific-computing-workbench/> by the `Docs`
+  workflow (`.github/workflows/docs.yml`), which builds with `--strict` on
+  every push to `main` that touches the docs and deploys when Pages is enabled.
+
 ## [1.0.0] - 2026-11-17
 
 The first stable release.  The public API is frozen and every public namespace
