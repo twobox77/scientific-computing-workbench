@@ -1,4 +1,6 @@
 site_name: SCW — Scientific Computing Workbench
+site_url: https://twobox77.github.io/scientific-computing-workbench/
+repo_url: https://github.com/twobox77/scientific-computing-workbench
 theme:
   name: material
 nav:

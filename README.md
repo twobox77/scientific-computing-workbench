@@ -201,6 +201,7 @@ uv run python benchmarks/bench_core.py
 
 ## 欣賞與操作（離線）
 
+線上的文件站：[**twobox77.github.io/scientific-computing-workbench**](https://twobox77.github.io/scientific-computing-workbench/)。
 完整的離線流程（取得原始碼、安裝依賴、跑範例、開文件站、用 Jupyter 操作、
 欣賞圖片）見 **[`docs/offline.md`](docs/offline.md)**。最短路徑：
 

@@ -7,6 +7,18 @@ uv sync --all-extras      # create .venv and install everything
 uv run pre-commit install # optional: run ruff on every commit
 ```
 
+## Documentation site
+
+The MkDocs site is built from `docs/` and published to GitHub Pages at
+<https://twobox77.github.io/scientific-computing-workbench/>. The `Docs`
+workflow (`.github/workflows/docs.yml`) builds with `--strict` and deploys on
+every push to `main` that touches `docs/`, `mkdocs.yml` or `README.md`.
+
+```bash
+uv run mkdocs serve -a 127.0.0.1:8000   # live preview
+uv run mkdocs build --strict            # what CI runs
+```
+
 ## Layout
 
 ```text

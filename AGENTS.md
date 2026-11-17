@@ -316,6 +316,16 @@ gh release create v0.7.0 --notes-file notes.md
 - `.github/workflows/release.yml` 已接上產生器：推 tag 會自動產生並帶入中文指南
   （舊 tag 沒對應 CHANGELOG 段時，退回 GitHub 自動產生的 notes）。
 
+## 文件站（GitHub Pages）
+
+- 站台：<https://twobox77.github.io/scientific-computing-workbench/>。
+- `.github/workflows/docs.yml`：`main` 有動到 `docs/`、`mkdocs.yml`、`README.md`
+  或該 workflow 時，`mkdocs build --strict` 後以 `actions/deploy-pages` 發佈。
+- 首次發佈需在 repo 設定啟用 Pages（Source = GitHub Actions）；workflow 內
+  `actions/configure-pages` 帶 `enablement: true`，若 token 具 `pages: write`
+  會自動啟用。改 repo 設定（topics、description、homepage、visibility）需
+  `administration:write`，沙盒的 fine-grained token 未具備，須由使用者在網頁操作。
+
 ## 已知環境注意事項
 
 - 沙盒內建 `GITHUB_TOKEN`（`ghu_`）與 `GITHUB_PERSONAL_ACCESS_TOKEN`（`github_pat_`）
