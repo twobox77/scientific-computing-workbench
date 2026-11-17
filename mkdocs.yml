@@ -15,6 +15,7 @@ nav:
       - Visualization: mathematics/visualization.md
       - Manifolds: mathematics/manifolds.md
       - Physics: mathematics/physics.md
+      - Experiments: mathematics/experiments.md
   - Architecture:
       - Decisions: architecture/decisions.md
   - Development: development.md

@@ -54,7 +54,13 @@ adapter 封裝，不得污染領域模型。
 - `src/scw/numerical/` — 數值演算法（SciPy adapter）。
 - `src/scw/symbolic/` — SymPy adapter（optional extra；只在此套件 import sympy）。
 - `src/scw/visualization/` — Matplotlib adapter（optional extra；只在此套件 import matplotlib）。
-- `src/scw/experiments/` — 尚未實作，Phase 1 僅建立套件邊界。
+- `src/scw/experiments/` — 實驗追蹤與可重現性：`records.py`（`RunRecord`/
+  `Artifact` 與 `jsonable`/`canonical_json`/`derive_seed`/`environment_fingerprint`）、
+  `experiment.py`（`Experiment`：設定 + 種子，`run` 產出紀錄、`rng(label)` 給可重現
+  生成器、`sweep`/`with_config`/`with_seed` 回傳複本）、`store.py`（`ResultStore`：
+  結果目錄，原子寫入與 `query`/`best`/`summary`）、`dataset.py`（`Dataset`：可重現
+  具名欄位 + `spec`、`split`/`fingerprint`/`from_spec`）。只依賴 `math_core` 與
+  `scw.exceptions`；**只有** `store.py` 碰檔案系統，其餘不得 import CLI/繪圖/檔案系統。
 - `src/scw/cli/` — 命令列入口（只解析參數、呼叫公開 API，不含數學演算法）。
 - `tests/{unit,property,integration,regression}/` — 單元、性質（Hypothesis）、整合、回歸測試。
 - `examples/` — 可執行範例（編號排序）；每個新功能至少補一個。
@@ -175,6 +181,30 @@ uv run pytest --cov=scw --cov-report=term-missing
   總能量，非保守力求位能丟 `NumericalError`）；`simulate` / `Trajectory`
   （委派 `scw.numerical.solve_ivp` 積分 `dx/dt=v`、`dv/dt=F/m`）。範例
   `10_physics_simulation.py`。
+- **0.8** `scw.experiments` 實驗追蹤與可重現性：`Experiment`（名稱 + 種子 +
+  設定，`run` 回傳 `RunRecord`，`rng(label)` 給可重現生成器，`sweep` 掃描）；
+  `RunRecord`/`Artifact`（不可變、可 JSON round-trip、含環境指紋與耗時）；
+  `ResultStore`（JSON 紀錄目錄 + `index.json`，原子寫入，`query`/`best`/`summary`）；
+  `Dataset`（可重現具名欄位 + `spec`，`split`/`fingerprint`/`from_spec`）。新例外
+  `ExperimentError`（`ValueError`）。CLI 加 `scw experiments summary|list|show|best`。
+  範例 `11_experiments.py`。
+
+### 實驗層慣例（0.8 起）
+
+- `scw/experiments/` 只依賴 `math_core` 與 `scw.exceptions`；**只有**
+  `store.py` 碰檔案系統，其餘模組不得 import 檔案系統/CLI/繪圖。本層**計入**
+  coverage（不像繪圖/symbolic 列入 omit），核心覆蓋率 ≥90%。
+- **可重現性是可檢驗的性質**：`derive_seed(seed, label)` 由 SHA-256 決定子種子；
+  `make_run_id` 由（實驗名、種子、設定、label）的 canonical JSON 決定，故「同設定
+  同種子」必得同 id 與同數值。性質測試就釘這些（重跑一致、`Dataset` 由 spec 重建、
+  store round-trip、split 恰好分割所有列）。
+- `RunRecord.config`/`results`/`environment` 用 `MappingProxyType` 唯讀；
+  `Dataset.columns` 防禦性複製（`np.array(..., copy=True)`）並回唯讀視圖——
+  回歸測試會釘住「改外部陣列不影響 dataset」。
+- 結果/設定必須 JSON 可序列化（`jsonable` 處理 numpy 純量/陣列、`.data` 物件、
+  `Path`、`datetime`、集合），否則丟 `ExperimentError`，不靜默字串化。
+- store 寫入先寫 `.tmp` 再 `replace`（原子），避免中斷留下半截紀錄；查詢排序用
+  `started_at`，跨 store 穩定。
 
 ### 數值層慣例（0.4 起）
 

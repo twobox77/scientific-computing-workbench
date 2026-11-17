@@ -14,7 +14,8 @@
 [符號代數](mathematics/symbolic.md)、
 [視覺化](mathematics/visualization.md)、
 [流形](mathematics/manifolds.md)、
-[物理模擬](mathematics/physics.md)。
+[物理模擬](mathematics/physics.md)、
+[實驗追蹤](mathematics/experiments.md)。
 
 貢獻者請讀 [Development](development.md)；Phase 1 的正式結案紀錄在
 [Phase 1 acceptance report](phase1-acceptance.md)。專案的計畫、進度與成果總覽，

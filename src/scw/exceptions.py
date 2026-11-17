@@ -35,3 +35,7 @@ class NumericalError(SCWError, ValueError):
 
 class ConvergenceError(SCWError, RuntimeError):
     """An iterative numerical method failed to converge."""
+
+
+class ExperimentError(SCWError, ValueError):
+    """An experiment configuration, run record or result store is invalid."""

@@ -6,6 +6,43 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-17
+
+### Added
+
+- `scw.experiments` (roadmap §11, 0.8): experiment tracking, run records,
+  datasets and reproducibility, built on `scw.math_core` and
+  `scw.exceptions`.  Only the result store touches the file system; the layer
+  imports neither the CLI nor plotting.
+  - `Experiment`: a name, seed, JSON-serializable `config` and `tags`.  `run`
+    executes a function in a reproducible context and returns a `RunRecord`;
+    `rng(label)` hands out a `numpy.random.Generator` seeded from
+    `(seed, label)`; `with_config`, `with_seed` and `sweep` return copies.
+  - `RunRecord` / `Artifact`: an immutable, self-describing record of one run
+    (config, results, status, environment fingerprint, timing, artifacts) that
+    round-trips through JSON.
+  - `ResultStore`: a directory of JSON records plus an `index.json`, with
+    atomic writes and `save`/`load`/`records`/`query`/`best`/`summary`.
+  - `Dataset`: reproducible named columns with the generator `spec` that
+    produced them, plus `split`, `fingerprint` and `from_spec`.
+  - Reproducibility helpers: `derive_seed`, `canonical_json`, `jsonable` and
+    `environment_fingerprint`; new `ExperimentError` (a `ValueError`).
+- CLI: `scw experiments summary|list|show|best` to inspect a result store.
+- Example `11_experiments.py` (a seeded Monte Carlo sweep, stored and queried,
+  plus a reproducible dataset split).
+- Unit, property (Hypothesis) and regression tests for the layer; the property
+  tests check that the same seed/config reproduces results, that a dataset
+  regenerates from its spec, that a store round-trips a record, and that a
+  split partitions every row once.
+- `docs/mathematics/experiments.md` and a `scw.experiments` section in
+  `docs/api.md`; the README, offline guide and MkDocs nav list the new layer,
+  example and CLI.
+
+### Changed
+
+- `pyproject.toml` no longer omits `src/scw/experiments/*` from coverage: the
+  layer is implemented and tested, so it counts towards the coverage gate.
+
 ## [0.7.0] - 2026-11-17
 
 ### Added
@@ -195,7 +232,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.4.0...v0.5.0

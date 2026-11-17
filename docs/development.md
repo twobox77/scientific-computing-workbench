@@ -16,7 +16,7 @@ src/scw/
   symbolic/       (boundary only in Phase 1)
   visualization/  (boundary only in Phase 1)
   physics/        Newtonian mechanics: particles, forces, systems, simulation
-  experiments/    (boundary only in Phase 1)
+  experiments/    experiment tracking, run records, datasets, reproducibility
   cli/            Typer entry point
 tests/
   unit/           single-type behaviour

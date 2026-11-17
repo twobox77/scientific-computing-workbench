@@ -103,12 +103,14 @@ uv sync --all-extras --frozen      # 安裝全部依賴（含繪圖 / notebook /
 | `08_visualization.py` | Matplotlib 繪圖，輸出 PNG 到 `scw_plots/` | `visualization` |
 | `09_manifolds.py` | 流形：切空間、metric、flat/sharp | — |
 | `10_physics_simulation.py` | 物理模擬：拋體、彈簧振子、行星軌道 | — |
+| `11_experiments.py` | 實驗追蹤：掃描、結果儲存與可重現資料集 | — |
 
 跑單一範例（輸出到終端機）：
 
 ```bash
 uv run python examples/09_manifolds.py        # 0.6 流形：切空間、metric、flat/sharp
 uv run python examples/10_physics_simulation.py  # 0.7 物理：拋體、彈簧、軌道
+uv run python examples/11_experiments.py      # 0.8 實驗：掃描、紀錄與可重現資料集
 uv run python examples/06_decompositions.py   # 0.4 分解：LU / QR / SVD / Cholesky / eigh
 uv run python examples/05_symbolic_algebra.py # 需 symbolic extra：uv sync --extra symbolic
 ```
@@ -157,6 +159,17 @@ uv run jupyter lab
 互動版操作：3D 圖上**左鍵拖曳可旋轉、滾輪縮放、右鍵拖曳可平移**；拖動
 `theta` / `phi` 滑桿可即時移動球面上的點，標題顯示 `|e_theta|`、`|e_phi|`，
 可觀察 `|e_phi| = r sinθ` 在赤道最大、越靠兩極越小。
+
+## 3.5 檢視實驗紀錄（CLI）
+
+0.8 的 `scw.experiments` 會把每次執行寫成 JSON 紀錄。用 CLI 直接檢視一個結果目錄：
+
+```bash
+uv run scw experiments summary runs/       # 各實驗的執行數與失敗數
+uv run scw experiments list runs/          # 列出執行紀錄（新到舊）
+uv run scw experiments show <run-id> runs/ # 單筆紀錄（JSON）
+uv run scw experiments best loss runs/     # 依某個結果鍵挑最佳的一筆
+```
 
 ## 4. 離線欣賞圖片（不開 notebook）
 

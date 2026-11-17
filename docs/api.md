@@ -403,10 +403,60 @@ remains. Importing `scw.symbolic` without the extra raises an actionable
 `ImportError`; the numeric core never imports SymPy. See
 [Symbolic algebra](mathematics/symbolic.md).
 
+## `scw.experiments`
+
+Experiment tracking, run records, datasets and reproducibility (roadmap §11,
+0.8).  An `Experiment` bundles a configuration and a seed, runs a function and
+captures a `RunRecord`; a `ResultStore` persists records and queries them; a
+`Dataset` makes inputs reproducible too.
+
+```python
+import numpy as np
+from scw.experiments import Dataset, Experiment, ResultStore
+
+store = ResultStore("runs")
+experiment = Experiment("mc", seed=42, config={"samples": 10000}, tags=("demo",), store=store)
+
+def estimate(exp):
+    x = exp.rng("sample").uniform(-1.0, 1.0, exp.config["samples"])
+    return {"mean": float(x.mean())}
+
+record = experiment.run(estimate)
+record.run_id            # deterministic id (same seed/config/label -> same id)
+record.results           # the returned mapping
+record.environment       # python / numpy / scipy / scw versions
+record.duration_seconds  # wall-clock time
+
+store.query(experiment="mc", tag="demo")   # matching records, newest first
+store.best("mean")                          # best successful run for a key
+store.load(record.run_id)                   # reload a record from disk
+```
+
+`experiment.rng(label)` returns a seeded `numpy.random.Generator`; a function
+that raises is captured into a failed record (`.ok` is `False`, `.error` holds
+the message) when `capture=True`, otherwise the exception propagates after the
+record is saved. `with_config`, `with_seed` and `sweep` return copies.
+
+```python
+dataset = Dataset.generate("points", generator="normal", shape=(1000, 2), seed=7)
+dataset["x0"]                  # read-only column view
+dataset.fingerprint()          # stable data hash
+train, test = dataset.split([0.8, 0.2], seed=7)
+Dataset.from_spec("points", dataset.spec)   # regenerate exactly
+```
+
+Invalid input raises `ExperimentError` (a `ValueError`): a bad name or seed, an
+unserializable config or result, a malformed dataset, or a query for a run the
+store does not hold.  See [Experiments](mathematics/experiments.md).
+
 ## Command line
 
 ```bash
 scw version     # show scw / Python / NumPy / SciPy versions
 scw doctor      # verify required dependencies import correctly
+scw experiments summary runs/    # counts by experiment and failures
+scw experiments list runs/       # recorded runs, newest first
+scw experiments show <run-id> runs/
+scw experiments best <key> runs/
 scw --help
 ```

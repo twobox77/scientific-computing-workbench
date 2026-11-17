@@ -142,3 +142,27 @@ def test_physics_simulation_bridges_core_numerical_and_physics() -> None:
     assert isinstance(start.position, Vector)
     assert end.position.dimension == 2
     assert traj.positions(0)[-1][0] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_experiments_track_a_reproducible_workflow(tmp_path) -> None:
+    # A whole workflow — a seeded Dataset feeding a tracked Experiment whose
+    # run is stored and queried — with the same numbers every time.
+    from scw.experiments import Dataset, Experiment, ResultStore
+
+    dataset = Dataset.generate("d", shape=(64, 2), seed=11)
+    store = ResultStore(tmp_path)
+
+    def mean_norm(experiment: Experiment) -> dict[str, float]:
+        rows = experiment.rng("rows").integers(0, dataset.size, size=8)
+        norms = np.linalg.norm(dataset["x0"][rows])
+        return {"mean_norm": float(norms)}
+
+    experiment = Experiment("norms", seed=5, config={"k": 8}, store=store)
+    first = experiment.run(mean_norm)
+    second = experiment.run(mean_norm)
+    assert first.run_id == second.run_id
+    assert first.results == second.results
+    reloaded = store.load(second.run_id)
+    assert reloaded.results == second.results
+    assert reloaded.config == second.config
+    assert store.best("mean_norm").run_id == second.run_id

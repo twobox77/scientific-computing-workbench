@@ -57,8 +57,8 @@ bash scripts/verify_phase1.sh
 | [0.4.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.4.0) | `scw.numerical`：線性系統、分解（LU/QR/SVD/Cholesky/eigh）、ODE solver | ✅ 已發行 |
 | [0.5.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.5.0) | `scw.visualization`：Matplotlib adapter（2D/3D 繪圖） | ✅ 已發行 |
 | [0.6.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.6.0) | `scw.manifold`：切／餘切空間、metric、`flat` / `sharp` | ✅ 已發行 |
-| [0.7.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.7.0) | `scw.physics`：質點、力模型、系統與牛頓模擬 | ✅ 最新 |
-| 0.8 | Experiment tracking、資料集與可重現性 | ⏳ 規劃中 |
+| [0.7.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.7.0) | `scw.physics`：質點、力模型、系統與牛頓模擬 | ✅ 已發行 |
+| [0.8.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.8.0) | `scw.experiments`：實驗追蹤、執行紀錄、可重現資料集與結果索引 | ✅ 最新 |
 | 0.9 | API 穩定化、效能基準、文件補齊 | ⏳ 規劃中 |
 | 1.0 | 穩定公開 API、完整安裝與使用文件、CI 發佈流程 | ⏳ 規劃中 |
 <!-- progress:end -->
@@ -101,6 +101,7 @@ bash scripts/verify_phase1.sh
 | [`08_visualization.py`](examples/08_visualization.py) | Matplotlib 繪圖，輸出 PNG 到 `scw_plots/` | `visualization` |
 | [`09_manifolds.py`](examples/09_manifolds.py) | 流形：切空間、metric、`flat` / `sharp` | — |
 | [`10_physics_simulation.py`](examples/10_physics_simulation.py) | 物理模擬：拋體、彈簧振子、行星軌道 | — |
+| [`11_experiments.py`](examples/11_experiments.py) | 實驗追蹤：掃描、執行紀錄與可重現資料集 | — |
 
 ### Notebook（`notebooks/`）
 
@@ -189,6 +190,7 @@ uv run scw doctor
 
 ```bash
 uv run python examples/09_manifolds.py        # 0.6 流形：切空間、metric、flat/sharp
+uv run python examples/11_experiments.py      # 0.8 實驗：掃描、紀錄與可重現資料集
 uv run python examples/06_decompositions.py   # 0.4 分解：LU / QR / SVD / Cholesky / eigh
 uv run python benchmarks/bench_core.py
 ```

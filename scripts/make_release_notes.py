@@ -51,6 +51,7 @@ WORK_DESCRIPTIONS = {
     "examples/08_visualization.py": "Matplotlib 繪圖（需 visualization extra）",
     "examples/09_manifolds.py": "流形：切空間、metric、flat/sharp",
     "examples/10_physics_simulation.py": "物理模擬：拋體、彈簧振子、行星軌道",
+    "examples/11_experiments.py": "實驗追蹤：掃描、執行紀錄與可重現資料集",
     "notebooks/01_scw_quickstart.ipynb": "基礎導覽",
     "notebooks/02_manifolds.ipynb": "流形靜態教學（已內嵌圖）",
     "notebooks/03_manifolds_interactive.ipynb": (
