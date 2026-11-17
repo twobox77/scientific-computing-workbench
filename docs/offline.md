@@ -102,11 +102,13 @@ uv sync --all-extras --frozen      # 安裝全部依賴（含繪圖 / notebook /
 | `07_ode_solving.py` | 常微分方程初值問題（衰減、簡諧振子） | — |
 | `08_visualization.py` | Matplotlib 繪圖，輸出 PNG 到 `scw_plots/` | `visualization` |
 | `09_manifolds.py` | 流形：切空間、metric、flat/sharp | — |
+| `10_physics_simulation.py` | 物理模擬：拋體、彈簧振子、行星軌道 | — |
 
 跑單一範例（輸出到終端機）：
 
 ```bash
 uv run python examples/09_manifolds.py        # 0.6 流形：切空間、metric、flat/sharp
+uv run python examples/10_physics_simulation.py  # 0.7 物理：拋體、彈簧、軌道
 uv run python examples/06_decompositions.py   # 0.4 分解：LU / QR / SVD / Cholesky / eigh
 uv run python examples/05_symbolic_algebra.py # 需 symbolic extra：uv sync --extra symbolic
 ```

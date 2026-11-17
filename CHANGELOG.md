@@ -6,8 +6,30 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-17
+
 ### Added
 
+- `scw.physics` (roadmap §11, 0.7): Newtonian mechanics built on the core and
+  numerical layers, importing neither the CLI, plotting nor the file system.
+  - `Particle`: a point mass whose `position` and `velocity` are ordinary
+    `Vector`s, with `momentum` and `kinetic_energy`.
+  - Force models: `ConstantForce` (uniform field), `SpringForce` (Hooke's law),
+    `CentralGravity` (inverse-square) and `Drag` (linear, non-conservative).
+    The first three subclass `ConservativeForce`, so they also provide
+    `potential_energy` and satisfy `F = -grad U`.
+  - `System`: groups particles with the forces acting on all of them and
+    reports `net_force`, `acceleration`, `total_momentum`, `kinetic_energy`,
+    `potential_energy` and `total_energy`.
+  - `simulate` / `Trajectory`: integrate the equations of motion with
+    `scw.numerical.solve_ivp`, exposing positions, velocities, states and the
+    conserved quantities over time.
+- Example `10_physics_simulation.py` (projectile, harmonic oscillator, orbit).
+- Unit, property (Hypothesis) and regression tests for the physics layer; the
+  property tests check that a conservative force is `-grad U` and that a
+  conservative simulation conserves energy.
+- `docs/mathematics/physics.md` and a `scw.physics` section in `docs/api.md`;
+  the README, offline guide and MkDocs nav list the new layer and example.
 - `scripts/make_release_notes.py`: composes each GitHub release's notes from
   a single source — the English section from `CHANGELOG.md`, the shared
   Chinese guide from `docs/offline.md` (retargeted to the version), and the
@@ -15,7 +37,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   Wired into the release workflow so every future tag gets the same Chinese
   companion guide automatically.
 - `docs/offline.md`: an "作品總覽" (works overview) section listing every
-  example and notebook with its purpose and required extra.
+  example and notebook with its purpose and required extra, and how to view and
+  operate SCW without network access.
 - `README.md`: a "取得與更新" section stating the clone-once, then `git pull`
   rule, so repeated clones do not spawn duplicate project folders.
 - Chinese `README.md`: rewrites the landing page in Chinese and consolidates
@@ -31,10 +54,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the round sphere with sliders for the base point.
 - `scripts/build_gallery.py` and the documentation **Gallery** page, showing
   every figure the plotting adapter can produce.
-- `docs/offline.md`: how to view and operate SCW without network access.
 
 ### Changed
 
+- `pyproject.toml` no longer omits `src/scw/physics/*` from coverage: the layer
+  is implemented and tested, so it counts towards the coverage gate.
 - Backfilled releases `v0.1.0`/`v0.2.0`/`v0.3.0` (tags, notes and built
   wheel/sdist) so all six versions carry the same Chinese guide; fixed the
   `CHANGELOG.md` compare links (`[Unreleased]` and the missing `[0.6.0]`).
@@ -171,7 +195,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Unit, property-based (Hypothesis) and integration tests.
 - Documentation (MkDocs Material), examples and a quickstart notebook.
 
-[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/twobox77/scientific-computing-workbench/compare/v0.3.0...v0.4.0

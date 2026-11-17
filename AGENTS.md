@@ -45,10 +45,16 @@ adapter 封裝，不得污染領域模型。
   SPD 驗證、`inner`/`norm`、`flat`/`sharp`）、`manifold.py`（`Manifold` ABC、
   `EuclideanSpace`、`Sphere`）。只依賴 `math_core` 與 `scw.exceptions`，
   **不得** import CLI/繪圖/檔案系統。
+- `src/scw/physics/` — 牛頓力學：`particles.py`（`Particle`：質量 + 位置/速度
+  `Vector`）、`forces.py`（`Force` ABC、`ConservativeForce` 子類、`ConstantForce` /
+  `SpringForce` / `CentralGravity` / `Drag`）、`system.py`（`System` 群組粒子與力，
+  回報動量/能量）、`simulation.py`（`simulate` 用 `scw.numerical.solve_ivp` 積分、
+  回傳 `Trajectory`）。只依賴 `math_core` 與 `numerical`，**不得** import CLI/繪圖/
+  檔案系統。積分一律委派數值層，物理層只組/拆狀態向量（`[positions..., velocities...]`）。
 - `src/scw/numerical/` — 數值演算法（SciPy adapter）。
 - `src/scw/symbolic/` — SymPy adapter（optional extra；只在此套件 import sympy）。
 - `src/scw/visualization/` — Matplotlib adapter（optional extra；只在此套件 import matplotlib）。
-- `src/scw/physics/`、`experiments/` — 尚未實作，Phase 1 僅建立套件邊界。
+- `src/scw/experiments/` — 尚未實作，Phase 1 僅建立套件邊界。
 - `src/scw/cli/` — 命令列入口（只解析參數、呼叫公開 API，不含數學演算法）。
 - `tests/{unit,property,integration,regression}/` — 單元、性質（Hypothesis）、整合、回歸測試。
 - `examples/` — 可執行範例（編號排序）；每個新功能至少補一個。
@@ -163,6 +169,12 @@ uv run pytest --cov=scw --cov-report=term-missing
   `inner`/`norm`、`flat`/`sharp` 音樂同構）、`Manifold` ABC +
   `EuclideanSpace(n)`（單位 metric）+ `Sphere(radius)`（球面座標，標準 metric，
   兩極排除）。範例 `09_manifolds.py`。
+- **0.7** `scw.physics` 牛頓力學：`Particle`；力模型 `ConstantForce` /
+  `SpringForce` / `CentralGravity` / `Drag`（前三者為 `ConservativeForce` 子類，
+  附 `potential_energy` 且滿足 `F = -grad U`）；`System`（動量、動能、位能、
+  總能量，非保守力求位能丟 `NumericalError`）；`simulate` / `Trajectory`
+  （委派 `scw.numerical.solve_ivp` 積分 `dx/dt=v`、`dv/dt=F/m`）。範例
+  `10_physics_simulation.py`。
 
 ### 數值層慣例（0.4 起）
 
@@ -185,6 +197,22 @@ uv run pytest --cov=scw --cov-report=term-missing
 - 測試用 `pytest.importorskip("matplotlib")` + `matplotlib.use("Agg")`（headless），
   整檔在缺 extra 時跳過。繪圖程式碼列入 coverage omit（與 symbolic 一致）。
 - 範例輸出寫進 gitignored 的 `scw_plots/`，勿把 PNG 提交進 repo。
+
+### 物理層慣例（0.7 起）
+
+- `scw/physics/` 只依賴 `math_core` 與 `numerical`；**不得** import CLI/繪圖/
+  檔案系統。積分一律委派 `scw.numerical.solve_ivp`，物理層只組/拆狀態向量
+  （`[positions..., velocities...]`）與提供力的模型。
+- `Force` 是 ABC；保守力繼承 `ConservativeForce` 並提供 `potential_energy`，
+  使「能量守恆」成為**可檢驗的性質**（性質測試以中央差分驗證 `F = -grad U`）。
+  非保守力（`Drag`）不得謊報位能；`System.potential_energy` 遇非保守力丟
+  `NumericalError`。
+- 驗證先行：非正/非有限質量、負勁度、維度不一致、重複名稱、空系統一律明確失敗
+  （`ValueError`/`DimensionError`/`NonFiniteError`）。重力在中心奇異點丟
+  `ZeroDivisionError`，不可回傳 inf/nan 汙染積分器。
+- `Trajectory` 的 `t`/`y` 回唯讀視圖；`positions`/`velocities`/`momentum` 等回
+  `(n_points, dimension)` 形狀的 ndarray。
+- 物理層**計入** coverage（不像繪圖/symbolic 列入 omit），核心覆蓋率 ≥90%。
 
 ## 文件語言
 

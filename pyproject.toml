@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "scw"
-version = "0.6.0"
+version = "0.7.0"
 description = "Scientific Computing Workbench"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -59,7 +59,6 @@ source = ["scw"]
 omit = [
   "src/scw/__main__.py",
   "src/scw/experiments/*",
-  "src/scw/physics/*",
   "src/scw/symbolic/*",
   "src/scw/visualization/*",
 ]

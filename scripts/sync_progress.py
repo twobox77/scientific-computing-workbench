@@ -49,6 +49,7 @@ MILESTONES = {
     "0.4.0": "`scw.numerical`：線性系統、分解（LU/QR/SVD/Cholesky/eigh）、ODE solver",
     "0.5.0": "`scw.visualization`：Matplotlib adapter（2D/3D 繪圖）",
     "0.6.0": "`scw.manifold`：切／餘切空間、metric、`flat` / `sharp`",
+    "0.7.0": "`scw.physics`：質點、力模型、系統與牛頓模擬",
 }
 
 

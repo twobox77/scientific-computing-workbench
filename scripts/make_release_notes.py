@@ -50,6 +50,7 @@ WORK_DESCRIPTIONS = {
     "examples/07_ode_solving.py": "常微分方程初值問題（衰減、簡諧振子）",
     "examples/08_visualization.py": "Matplotlib 繪圖（需 visualization extra）",
     "examples/09_manifolds.py": "流形：切空間、metric、flat/sharp",
+    "examples/10_physics_simulation.py": "物理模擬：拋體、彈簧振子、行星軌道",
     "notebooks/01_scw_quickstart.ipynb": "基礎導覽",
     "notebooks/02_manifolds.ipynb": "流形靜態教學（已內嵌圖）",
     "notebooks/03_manifolds_interactive.ipynb": (

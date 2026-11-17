@@ -303,6 +303,84 @@ A `Metric` validates its components (symmetric, positive definite) and raises
 `NumericalError` otherwise; a point at a sphere pole raises `DimensionError`.
 See [Manifolds](mathematics/manifolds.md).
 
+## `scw.physics`
+
+Newtonian mechanics on top of the core and numerical layers (roadmap §11, 0.7).
+A `Particle` is a point mass whose `position` and `velocity` are ordinary
+`Vector`s; a `Force` answers `force(particle, t) -> Vector`; a `System` groups
+particles with the forces acting on all of them and reports the conserved
+quantities; `simulate` integrates the equations of motion with
+`scw.numerical.solve_ivp` and returns a `Trajectory`.
+
+```python
+import numpy as np
+from scw.math_core import Vector
+from scw.physics import Particle, System, ConstantForce, simulate
+
+ball = Particle(1.0, Vector([0.0, 0.0]), Vector([3.0, 4.0]))
+system = System([ball], ConstantForce([0.0, -9.81]))   # uniform gravity
+traj = simulate(system, (0.0, 1.0), t_eval=np.linspace(0.0, 1.0, 51))
+
+traj.positions(0)        # particle 0 positions, shape (n_points, 2)
+traj.velocities(0)       # particle 0 velocities
+traj.states(0)           # particle 0 as a list of Particle objects
+traj.total_energy()      # mechanical energy at each time (conservative forces)
+traj.momentum()          # total momentum at each time
+```
+
+### Forces
+
+```python
+from scw.physics import ConstantForce, SpringForce, CentralGravity, Drag
+
+ConstantForce([0.0, -9.81])            # uniform field,  F = const
+SpringForce([0.0, 0.0], stiffness=4.0) # Hooke's law,   F = -k (x - anchor)
+CentralGravity([0.0, 0.0], mu=1.0)     # inverse-square, F = -mu m (x-c)/|x-c|^3
+Drag(coefficient=0.5)                  # linear drag,   F = -c v (not conservative)
+```
+
+The first three subclass `ConservativeForce`, so they also provide
+`potential_energy(particle, t)` and satisfy `F = -grad U`. `Drag` is not
+conservative: a `System` that includes it cannot report a potential or total
+energy (that raises `NumericalError`).
+
+### `System`
+
+```python
+system = System([a, b], [gravity, drag], name="two-body")
+system.particle(0)          # or system.particle("name")
+system.net_force(p, t)      # sum of every force on p
+system.acceleration(p, t)   # net_force / mass
+system.total_momentum()     # sum of m v
+system.kinetic_energy()     # sum of (1/2) m |v|^2
+system.potential_energy(t)  # requires conservative forces
+system.total_energy(t)      # K + U
+```
+
+Particles must be non-empty, share one dimension and (when named) have unique
+names; `forces` may be a single `Force` or an iterable of them.
+
+### `simulate` / `Trajectory`
+
+```python
+from scw.physics import simulate
+from scw.numerical import METHODS
+
+traj = simulate(system, (0.0, 10.0), method="DOP853", t_eval=np.linspace(0, 10, 501),
+                rtol=1e-11, atol=1e-13, dense_output=False)
+traj.t                      # the time grid
+traj.kinetic_energy()       # K(t)
+traj.potential_energy()     # U(t)
+traj.total_energy()         # K + U (conserved for conservative forces)
+traj.momentum()             # total momentum, shape (n_points, dimension)
+traj.final_system()         # the System at the last time
+```
+
+The keyword arguments mirror `scw.numerical.solve_ivp` (`method` is one of
+`METHODS`). Invalid input raises `TypeError`, `DimensionError`, `ValueError`
+(non-positive mass/stiffness, duplicate names) or `NonFiniteError`; a failed
+integration raises `ConvergenceError`. See [Physics](mathematics/physics.md).
+
 ## `scw.symbolic`
 
 Optional adapter over SymPy, installed with the `symbolic` extra. `SymbolicMatrix`

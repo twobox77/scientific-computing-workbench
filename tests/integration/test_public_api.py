@@ -128,3 +128,17 @@ def test_ode_solution_feeds_back_into_the_domain_layer() -> None:
     first, last = sol.state_at(0), sol.state_at(1)
     assert first.dimension == last.dimension == 2
     assert first.dot(first) == pytest.approx(1.0)
+
+
+def test_physics_simulation_bridges_core_numerical_and_physics() -> None:
+    # A physics System is simulated with scw.numerical, and the resulting
+    # Trajectory hands back ordinary Vectors that the core can operate on.
+    from scw.physics import ConstantForce, Particle, System, simulate
+
+    ball = Particle(1.0, Vector([0.0, 0.0]), Vector([1.0, 2.0]))
+    system = System([ball], ConstantForce([0.0, -9.81]))
+    traj = simulate(system, (0.0, 1.0), t_eval=[0.0, 1.0], rtol=1e-10, atol=1e-12)
+    start, end = traj.states(0)
+    assert isinstance(start.position, Vector)
+    assert end.position.dimension == 2
+    assert traj.positions(0)[-1][0] == pytest.approx(1.0, abs=1e-9)

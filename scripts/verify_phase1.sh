@@ -32,7 +32,7 @@ uv run scw version
 uv run scw doctor
 
 echo "== examples =="
-for example in examples/0*.py; do
+for example in examples/[0-9]*.py; do
   echo "  - ${example}"
   uv run python "${example}" > /dev/null
 done

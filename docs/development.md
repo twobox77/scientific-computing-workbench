@@ -15,7 +15,7 @@ src/scw/
   numerical/      SciPy-backed linear algebra, decompositions and ODE solving
   symbolic/       (boundary only in Phase 1)
   visualization/  (boundary only in Phase 1)
-  physics/        (boundary only in Phase 1)
+  physics/        Newtonian mechanics: particles, forces, systems, simulation
   experiments/    (boundary only in Phase 1)
   cli/            Typer entry point
 tests/

@@ -14,6 +14,7 @@ nav:
       - Symbolic algebra: mathematics/symbolic.md
       - Visualization: mathematics/visualization.md
       - Manifolds: mathematics/manifolds.md
+      - Physics: mathematics/physics.md
   - Architecture:
       - Decisions: architecture/decisions.md
   - Development: development.md

@@ -56,8 +56,8 @@ bash scripts/verify_phase1.sh
 | [0.3.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.3.0) | `scw.symbolic`（SymPy adapter）、`einsum`、複雜度護欄 | ✅ 已發行 |
 | [0.4.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.4.0) | `scw.numerical`：線性系統、分解（LU/QR/SVD/Cholesky/eigh）、ODE solver | ✅ 已發行 |
 | [0.5.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.5.0) | `scw.visualization`：Matplotlib adapter（2D/3D 繪圖） | ✅ 已發行 |
-| [0.6.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.6.0) | `scw.manifold`：切／餘切空間、metric、`flat` / `sharp` | ✅ 最新 |
-| 0.7 | Physics models 與 simulation | ⏳ 規劃中 |
+| [0.6.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.6.0) | `scw.manifold`：切／餘切空間、metric、`flat` / `sharp` | ✅ 已發行 |
+| [0.7.0](https://github.com/twobox77/scientific-computing-workbench/releases/tag/v0.7.0) | `scw.physics`：質點、力模型、系統與牛頓模擬 | ✅ 最新 |
 | 0.8 | Experiment tracking、資料集與可重現性 | ⏳ 規劃中 |
 | 0.9 | API 穩定化、效能基準、文件補齊 | ⏳ 規劃中 |
 | 1.0 | 穩定公開 API、完整安裝與使用文件、CI 發佈流程 | ⏳ 規劃中 |
@@ -74,10 +74,14 @@ bash scripts/verify_phase1.sh
 - `scw.visualization`（optional `visualization` extra）：Matplotlib adapter。
 - `scw.manifold`：`EuclideanSpace`、`Sphere` 帶 Riemannian metric；`Metric`
   提供 `inner`、`norm` 與 `flat` / `sharp`。
+- `scw.physics`：`Particle`、力模型（`ConstantForce` / `SpringForce` /
+  `CentralGravity` / `Drag`）、`System`（動量與能量）與 `simulate` /
+  `Trajectory` 牛頓模擬。
 - CLI：`scw version`、`scw doctor`。
 - 測試：單元、性質（Hypothesis）、整合、回歸四層。
 
-尚未支援：符號微積分（積分／極限）、PDE 求解器、物理模擬。
+尚未支援：符號微積分（積分／極限）、PDE 求解器、多體（N-body）交互作用與
+剛體動力學。
 
 變更歷史見 [`CHANGELOG.md`](CHANGELOG.md)。
 
@@ -96,6 +100,7 @@ bash scripts/verify_phase1.sh
 | [`07_ode_solving.py`](examples/07_ode_solving.py) | 常微分方程初值問題（衰減、簡諧振子） | — |
 | [`08_visualization.py`](examples/08_visualization.py) | Matplotlib 繪圖，輸出 PNG 到 `scw_plots/` | `visualization` |
 | [`09_manifolds.py`](examples/09_manifolds.py) | 流形：切空間、metric、`flat` / `sharp` | — |
+| [`10_physics_simulation.py`](examples/10_physics_simulation.py) | 物理模擬：拋體、彈簧振子、行星軌道 | — |
 
 ### Notebook（`notebooks/`）
 
@@ -111,7 +116,8 @@ bash scripts/verify_phase1.sh
   [`scripts/build_gallery.py`](scripts/build_gallery.py) 確定性重生）。
 - **[文件網站](docs/)**（MkDocs Material）：數學主題（[向量空間](docs/mathematics/vector-spaces.md)、
   [數值方法](docs/mathematics/numerical-methods.md)、[符號代數](docs/mathematics/symbolic.md)、
-  [視覺化](docs/mathematics/visualization.md)、[流形](docs/mathematics/manifolds.md)）、
+  [視覺化](docs/mathematics/visualization.md)、[流形](docs/mathematics/manifolds.md)、
+  [物理模擬](docs/mathematics/physics.md)）、
   [公開 API](docs/api.md)、[架構決策](docs/architecture/decisions.md)、
   [開發指南](docs/development.md)。
 - **[離線欣賞與操作指南](docs/offline.md)**：無網路時如何安裝、欣賞、操作、解除安裝。
