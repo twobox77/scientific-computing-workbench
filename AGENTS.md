@@ -320,11 +320,13 @@ gh release create v0.7.0 --notes-file notes.md
 
 - 站台：<https://twobox77.github.io/scientific-computing-workbench/>。
 - `.github/workflows/docs.yml`：`main` 有動到 `docs/`、`mkdocs.yml`、`README.md`
-  或該 workflow 時，`mkdocs build --strict` 後以 `actions/deploy-pages` 發佈。
-- 首次發佈需在 repo 設定啟用 Pages（Source = GitHub Actions）；workflow 內
-  `actions/configure-pages` 帶 `enablement: true`，若 token 具 `pages: write`
-  會自動啟用。改 repo 設定（topics、description、homepage、visibility）需
-  `administration:write`，沙盒的 fine-grained token 未具備，須由使用者在網頁操作。
+  或該 workflow 時，先 `mkdocs build --strict`，再（若 Pages 已啟用）以
+  `actions/deploy-pages` 發佈。build 永遠綠燈；deploy 以「Pages 是否啟用」為閘，
+  未啟用時只跳過並留 `::notice::`。
+- **首次發佈需在 repo 設定啟用 Pages**（Settings → Pages → Source = GitHub Actions）。
+  workflow token 與沙盒的 fine-grained token 皆無 `administration:write`，
+  無法用 API 建立 Pages site（實測 `configure-pages` 回 403）；啟用後 push 即自動發佈。
+  同理，改 repo 設定（topics、description、homepage、visibility）也須由使用者在網頁操作。
 
 ## 已知環境注意事項
 
